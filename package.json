@@ -1,0 +1,25 @@
+{
+  "name": "amopet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AMOPETS — Coleiras exclusivas para cães e gatos",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/all-unit-tests.js tests/components.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PedroVonMises/amopet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PedroVonMises/amopet/issues"
+  },
+  "homepage": "https://github.com/PedroVonMises/amopet#readme",
+  "devDependencies": {
+    "vite": "^8.0.8"
+  }
+}

@@ -65,7 +65,7 @@
           <span>Total</span>
           <span id="drawer-total">R$ 0,00</span>
         </div>
-        <a href="checkout.html" class="btn btn-primary cart-drawer__btn">Ir para o Pagamento 🔒</a>
+        <a href="checkout.html" class="btn btn-primary cart-drawer__btn">Ir para o Pagamento →</a>
       </div>
     `;
 

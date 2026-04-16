@@ -254,12 +254,12 @@
 /* Floating product image behind text */
 .hero__floating-product {
   position: absolute;
-  width: clamp(250px, 40vw, 500px);
-  height: clamp(250px, 40vw, 500px);
+  width: clamp(250px, 45vw, 600px);
+  height: clamp(250px, 45vw, 600px);
   right: 5%;
   top: 50%;
   transform: translateY(-50%);
-  opacity: 0.2;
+  opacity: 0.9;
   z-index: 0;
   animation: heroFloat 4s ease-in-out infinite;
   pointer-events: none;
@@ -269,7 +269,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
 }
 
 /* Paw sparkle decorations */
@@ -598,5 +598,154 @@
 @media (max-width: 480px) {
   .footer__grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Search Overlay System ─── */
+
+/* Backdrop that covers the page */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) + 10);
+  background: rgba(45, 27, 54, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+  pointer-events: none;
+}
+
+.search-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The expanding search bar container */
+.search-expand {
+  position: fixed;
+  z-index: calc(var(--z-modal) + 11);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--color-white);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 0 var(--space-md);
+  box-shadow: var(--shadow-xl), 0 0 0 0 rgba(255, 210, 63, 0);
+  overflow: hidden;
+  /* Start as the icon button size/position — JS will set top/left/width/height */
+  transition:
+    top var(--duration-slow) var(--ease-spring),
+    left var(--duration-slow) var(--ease-spring),
+    width var(--duration-slow) var(--ease-spring),
+    height var(--duration-slow) var(--ease-spring),
+    border-radius var(--duration-slow) var(--ease-spring),
+    box-shadow var(--duration-slow) var(--ease-spring);
+}
+
+.search-expand.expanded {
+  box-shadow: var(--shadow-xl), 0 0 0 4px var(--color-yellow-primary);
+}
+
+.search-expand__icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--color-purple-primary);
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.search-expand__input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--color-dark);
+  outline: none;
+  opacity: 0;
+  transform: translateX(12px);
+  transition:
+    opacity var(--duration-normal) var(--ease-smooth) 0.2s,
+    transform var(--duration-normal) var(--ease-spring) 0.2s;
+  min-width: 0;
+}
+
+.search-expand__input::placeholder {
+  color: var(--color-purple-light);
+  font-weight: var(--fw-medium);
+}
+
+.search-expand.expanded .search-expand__input {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.search-expand__close {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--color-gray);
+  border-radius: var(--radius-circle);
+  color: var(--color-purple-dark);
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity var(--duration-fast) var(--ease-smooth) 0.25s,
+    transform var(--duration-normal) var(--ease-spring) 0.25s,
+    background var(--duration-fast);
+}
+
+.search-expand__close:hover {
+  background: var(--color-yellow-light);
+}
+
+.search-expand.expanded .search-expand__close {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Hint text that fades below the bar */
+.search-expand__hint {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-yellow-primary);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--duration-fast) 0.4s;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+}
+
+.search-expand.expanded .search-expand__hint {
+  opacity: 1;
+}
+
+/* Reduced motion: skip the morph, just appear */
+@media (prefers-reduced-motion: reduce) {
+  .search-expand {
+    transition: none;
+  }
+  .search-expand__input,
+  .search-expand__close,
+  .search-expand__hint {
+    transition: none;
+  }
+  .search-overlay {
+    transition: none;
   }
 }

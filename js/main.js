@@ -318,4 +318,165 @@
       toast.style.transform = 'translateX(120%)';
     }, 3500);
   }
+
+  // ═══════════════════════════════════════════
+  // Search Transition (Lupa → Expanding Bar)
+  // ═══════════════════════════════════════════
+  function setupSearchTransition() {
+    var btnSearch = document.getElementById('btn-search');
+    if (!btnSearch) return;
+
+    // If we're already on catalog, just focus the search bar
+    if (window.location.pathname.indexOf('catalog') >= 0) {
+      btnSearch.addEventListener('click', function () {
+        var catSearch = document.getElementById('catalog-search');
+        if (catSearch) catSearch.focus();
+      });
+      return;
+    }
+
+    var isOpen = false;
+    var overlay = null;
+    var bar = null;
+    var input = null;
+
+    function openSearch() {
+      if (isOpen) return;
+      isOpen = true;
+
+      // Measure origin from the button
+      var rect = btnSearch.getBoundingClientRect();
+
+      // Create overlay
+      overlay = document.createElement('div');
+      overlay.className = 'search-overlay';
+      document.body.appendChild(overlay);
+
+      // Create expanding search bar
+      bar = document.createElement('div');
+      bar.className = 'search-expand';
+      bar.setAttribute('role', 'search');
+      bar.innerHTML =
+        '<svg class="search-expand__icon" viewBox="0 0 24 24">' +
+          '<circle cx="11" cy="11" r="8"/>' +
+          '<line x1="21" y1="21" x2="16.65" y2="16.65"/>' +
+        '</svg>' +
+        '<input type="search" class="search-expand__input" placeholder="O que seu pet precisa?" autocomplete="off" />' +
+        '<button class="search-expand__close" aria-label="Fechar busca">' +
+          '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+            '<line x1="18" y1="6" x2="6" y2="18"/>' +
+            '<line x1="6" y1="6" x2="18" y2="18"/>' +
+          '</svg>' +
+        '</button>' +
+        '<span class="search-expand__hint">Pressione Enter para buscar 🐾</span>';
+
+      // Position at origin (icon button)
+      bar.style.top = rect.top + 'px';
+      bar.style.left = rect.left + 'px';
+      bar.style.width = rect.width + 'px';
+      bar.style.height = rect.height + 'px';
+      bar.style.borderRadius = '50%';
+
+      document.body.appendChild(bar);
+      input = bar.querySelector('.search-expand__input');
+
+      // Force layout read, then expand
+      void bar.offsetWidth;
+
+      // Calculate target: centered in viewport, at header height
+      var targetWidth = Math.min(window.innerWidth * 0.9, 640);
+      var targetHeight = 56;
+      var targetTop = rect.top + (rect.height / 2) - (targetHeight / 2);
+      var targetLeft = (window.innerWidth - targetWidth) / 2;
+
+      bar.style.top = targetTop + 'px';
+      bar.style.left = targetLeft + 'px';
+      bar.style.width = targetWidth + 'px';
+      bar.style.height = targetHeight + 'px';
+      bar.style.borderRadius = '';
+
+      overlay.classList.add('active');
+
+      // Stagger: add expanded class after morph starts
+      setTimeout(function () {
+        bar.classList.add('expanded');
+        input.focus();
+      }, 150);
+
+      // Close button
+      bar.querySelector('.search-expand__close').addEventListener('click', closeSearch);
+
+      // Backdrop close
+      overlay.addEventListener('click', closeSearch);
+
+      // Keyboard
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && input.value.trim().length > 0) {
+          e.preventDefault();
+          navigateToCatalog(input.value.trim());
+        }
+        if (e.key === 'Escape') {
+          closeSearch();
+        }
+      });
+
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSearch() {
+      if (!isOpen) return;
+      isOpen = false;
+
+      // Reverse morph back to icon
+      var rect = btnSearch.getBoundingClientRect();
+      bar.classList.remove('expanded');
+      bar.style.top = rect.top + 'px';
+      bar.style.left = rect.left + 'px';
+      bar.style.width = rect.width + 'px';
+      bar.style.height = rect.height + 'px';
+      bar.style.borderRadius = '50%';
+
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+
+      setTimeout(function () {
+        if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
+        if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        bar = null;
+        overlay = null;
+        input = null;
+        btnSearch.focus();
+      }, 500);
+    }
+
+    function navigateToCatalog(query) {
+      // Brief visual feedback before navigating
+      if (input) {
+        input.style.color = 'var(--color-yellow-primary)';
+      }
+      setTimeout(function () {
+        window.location.href = 'catalog.html?q=' + encodeURIComponent(query);
+      }, 300);
+    }
+
+    btnSearch.addEventListener('click', openSearch);
+  }
+
+  // ═══════════════════════════════════════════
+  // Auto-focus catalog search if arriving with ?q=
+  // ═══════════════════════════════════════════
+  (function autoFocusCatalogSearch() {
+    if (window.location.pathname.indexOf('catalog') < 0) return;
+    var params = new URLSearchParams(window.location.search);
+    var q = params.get('q');
+    if (q) {
+      var catSearch = document.getElementById('catalog-search');
+      if (catSearch) {
+        catSearch.value = q;
+        catSearch.focus();
+      }
+    }
+  })();
+
 })();

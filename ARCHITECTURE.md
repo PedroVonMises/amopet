@@ -1,8 +1,10 @@
 # AMOPETS — Architecture Document
 
-> **Project Type:** WEB (Static E-commerce Frontend)
-> **Stack:** HTML5 + CSS3 + Vanilla JavaScript (ES5/ES6, No frameworks)
-> **Test Runner:** Node.js native `node:test`
+> **Project Type:** WEB (E-commerce Frontend — Vite + Vanilla JS)
+> **Stack:** Vite 6 + HTML5 + CSS3 + Vanilla JavaScript (ES Modules)
+> **Deploy Target:** Vercel (Static Site / Edge Functions)
+> **Design Approach:** Mobile-First
+> **Test Runner:** Vitest + Node.js native `node:test`
 > **Updated:** 2026-04-16
 
 ---
@@ -10,16 +12,14 @@
 ## 📑 Table of Contents
 
 - [Project Identity](#-project-identity)
-- [Current Architecture](#-current-architecture)
-- [File Map](#-file-map)
+- [Current State Assessment](#-current-state-assessment)
+- [Target Architecture (Vite + Vercel)](#-target-architecture-vite--vercel)
+- [Migration Phases](#-migration-phases)
+- [File Map — Current vs Target](#-file-map--current-vs-target)
 - [Design System](#-design-system)
-- [Module Dependency Graph](#-module-dependency-graph)
-- [Current Test Coverage](#-current-test-coverage)
-- [Screens Roadmap](#-screens-roadmap)
-- [Test Roadmap](#-test-roadmap)
+- [Mobile-First Strategy](#-mobile-first-strategy)
 - [Agent Assignment Matrix](#-agent-assignment-matrix)
-- [Development Phases](#-development-phases)
-- [Scripts & Commands](#-scripts--commands)
+- [Vercel Deployment](#-vercel-deployment)
 - [Conventions](#-conventions)
 
 ---
@@ -38,149 +38,375 @@
 
 ---
 
-## 🏗 Current Architecture
+## 📊 Current State Assessment
+
+### ✅ Completed Features (Phases 1–7)
+
+| Feature | Status | Files |
+|---------|--------|-------|
+| Landing Page (8 sections, responsive) | ✅ | `index.html`, `main.js`, `carousel.js` |
+| Checkout (3 steps, Pix/Card/Boleto, ViaCEP) | ✅ | `checkout.html`, `checkout.js` |
+| Product Detail (gallery, variants, qty) | ✅ | `product.html`, `product.js` |
+| Catalog (filters, sort, pagination, URL sync) | ✅ | `catalog.html`, `catalog.js` |
+| Cart Drawer (slide-out, localStorage) | ✅ | `cartDrawer.js`, `miniCart.css` |
+| SEO (Schema.org, OG, sitemap, robots) | ✅ | All pages |
+| Search Transition (lupa → morph bar → catalog) | ✅ | `layout.css`, `main.js` |
+| Unit Tests (215 utility + 182 component = 397) | ✅ | `tests/*.test.js` |
+
+### 🔴 Current Technical Debt
+
+| Issue | Impact | Fix in Migration |
+|-------|--------|-----------------|
+| No build system | No minification, no tree-shaking, no code splitting | Vite solves all |
+| IIFE pattern + `window.*` globals | No ES modules, poor encapsulation | ES module imports |
+| Multiple `<script>` tags per page | Render-blocking, no bundling | Vite auto-bundles |
+| Multiple `<link rel="stylesheet">` per page | No CSS bundling, no PostCSS | Vite CSS pipeline |
+| No `package.json` | Can't install deps, no scripts | `npm init` |
+| `var` keyword + ES5 patterns | Unnecessary, all target browsers support ES6+ | `const`/`let` |
+| `npx http-server` dev server | No HMR, no auto-reload | Vite dev server |
+| Static HTML pages (no routing) | Page reloads on navigation, duplicated headers/footers | Vite MPA or vanilla-router |
+| No image optimization pipeline | Large PNGs (400-900KB each) | `vite-imagetools` |
+| No environment variables | Hardcoded URLs | `.env` + `import.meta.env` |
+
+---
+
+## 🏗 Target Architecture (Vite + Vercel)
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                     │
+│                    VITE BUILD SYSTEM                      │
 │                                                          │
-│  index.html ─── Landing Page (8 sections)                │
-│  checkout.html ─ Multi-step Checkout (3 steps + success) │
-│  product.html ── Product Detail Page (gallery+variants)  │
-│  catalog.html ── Catalog Page (filters+pagination)       │
-│  [PLANNED] account.html ─── User Account / Order History │
+│  vite.config.js ── Multi-page app config                 │
+│  .env / .env.production ── Environment variables          │
+│  vercel.json ── Deploy config + rewrites                 │
 │                                                          │
 ├──────────────────────────────────────────────────────────┤
-│                    STYLING LAYER                          │
+│                    PAGES (MPA — Multi-Page App)           │
 │                                                          │
-│  css/variables.css ── Design tokens (colors, type, space)│
-│  css/base.css ─────── Reset, typography, utilities, a11y │
-│  css/components.css ── Reusable components (cards, btns) │
-│  css/layout.css ────── Page-specific layouts & grids     │
-│  css/animations.css ── Keyframes, reveals, reduced-motion│
-│  css/checkout.css ──── Checkout-specific styles          │
-│  css/product.css ───── PDP-specific styles               │
-│  css/catalog.css ───── Catalog/filter/pagination styles  │
+│  index.html ─────── Landing Page (entry point)           │
+│  catalog.html ───── Catalog / Shop                       │
+│  product.html ───── Product Detail Page                  │
+│  checkout.html ──── Multi-step Checkout                  │
 │                                                          │
 ├──────────────────────────────────────────────────────────┤
-│                    LOGIC LAYER                            │
+│                    STYLING LAYER (PostCSS)                │
 │                                                          │
-│  js/main.js ────────── Landing page orchestrator         │
-│  js/carousel.js ────── Testimonials carousel             │
-│  js/checkout.js ────── Checkout orchestrator             │
-│  js/product.js ─────── PDP orchestrator (8 products)     │
-│  js/catalog.js ─────── Catalog orchestrator (pagination) │
-│                                                          │
-├──────────────────────────────────────────────────────────┤
-│              COMPONENT LOGIC LAYER (Pure JS)              │
-│                                                          │
-│  js/components/productCard.js ── Card view model         │
-│  js/components/gallery.js ────── Image nav + zoom        │
-│  js/components/sideFilter.js ─── Filter engine           │
-│  js/components/variantSelector.js ── Size/color picker   │
-│  js/components/quantityStepper.js ── Qty bounds          │
-│  js/components/miniCart.js ────── Cart view model         │
-│  js/components/addressForm.js ─── Address validation     │
-│  js/components/orderSummary.js ── Order calculations     │
+│  src/css/variables.css ── Design tokens                  │
+│  src/css/base.css ─────── Reset, typography, a11y        │
+│  src/css/components.css ── Reusable components           │
+│  src/css/layout.css ────── Page layouts & grids          │
+│  src/css/animations.css ── Keyframes & reveals           │
+│  src/css/pages/checkout.css ── Checkout-specific         │
+│  src/css/pages/product.css ─── PDP-specific              │
+│  src/css/pages/catalog.css ─── Catalog-specific          │
+│  src/css/pages/miniCart.css ── Cart drawer                │
 │                                                          │
 ├──────────────────────────────────────────────────────────┤
-│              UTILITY LAYER (Pure JS)                      │
+│                    LOGIC LAYER (ES Modules)               │
 │                                                          │
-│  js/utils/formatters.js ── BRL currency, slugs, labels   │
-│  js/utils/validators.js ── Email, CEP, coupon, sizes     │
-│  js/utils/cart.js ──────── Cart reducer (immutable)      │
-│  js/utils/badges.js ────── Badge priority rules          │
-│  js/utils/availability.js ─ Stock checks, low stock      │
-│  js/utils/queryParams.js ── URL parse/build/merge        │
+│  src/js/main.js ────────── Landing page entry            │
+│  src/js/catalog.js ─────── Catalog entry                 │
+│  src/js/product.js ─────── PDP entry                     │
+│  src/js/checkout.js ────── Checkout entry                 │
 │                                                          │
 ├──────────────────────────────────────────────────────────┤
-│              TEST LAYER (Node.js native runner)           │
+│              SHARED MODULES (ES Modules)                  │
 │                                                          │
-│  tests/all-unit-tests.js ── 215 utility tests (6 suites)│
-│  tests/components.test.js ─ 182 component tests          │
-│  [PLANNED] tests/checkout.test.js ── Checkout E2E logic  │
-│  [PLANNED] tests/e2e/ ─────── Playwright E2E suite       │
+│  src/js/components/*.js ── 9 component modules           │
+│  src/js/utils/*.js ─────── 6 utility modules             │
+│  src/js/shared/header.js ── Shared header logic          │
+│  src/js/shared/footer.js ── Shared footer injection      │
+│  src/js/shared/cart-badge.js ── Cart badge sync           │
 │                                                          │
 ├──────────────────────────────────────────────────────────┤
-│              ASSETS                                       │
+│              ASSETS (Optimized by Vite)                   │
 │                                                          │
-│  images/ ── 8 product PNGs + 3 collection + 1 hero       │
-│  agents/ ── 20 specialist agent definitions               │
+│  public/images/ ── Product + collection PNGs             │
+│  public/favicon.ico ── Favicon                           │
+│                                                          │
+├──────────────────────────────────────────────────────────┤
+│              TEST LAYER                                   │
+│                                                          │
+│  tests/unit/*.test.js ── Vitest unit tests               │
+│  tests/e2e/*.spec.js ─── Playwright E2E (future)        │
+│                                                          │
+├──────────────────────────────────────────────────────────┤
+│              DEPLOY (Vercel)                              │
+│                                                          │
+│  vercel.json ── Routing, headers, edge config            │
+│  dist/ ──────── Vite build output (auto-deployed)        │
 │                                                          │
 └──────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📁 File Map
+## 📋 Migration Phases
+
+### Phase M1: Vite Scaffold — `devops-engineer` + `frontend-specialist`
+
+> **Goal:** Get the existing site running under Vite with zero regressions.
+> **Duration estimate:** Single session
+> **Priority:** 🔴 CRITICAL — blocks everything
 
 ```
-amopet/
-├── agents/                          # 20 specialist agent definitions
-│   ├── orchestrator.md              # Master coordinator
-│   ├── frontend-specialist.md       # UI/UX architect
-│   ├── backend-specialist.md        # API/server architect
-│   ├── test-engineer.md             # Unit/integration testing
-│   ├── qa-automation-engineer.md    # E2E/Playwright testing
-│   ├── performance-optimizer.md     # Core Web Vitals, bundle
-│   ├── seo-specialist.md            # SEO/GEO optimization
-│   ├── devops-engineer.md           # Deploy, CI/CD
-│   ├── security-auditor.md          # OWASP, auth review
-│   ├── debugger.md                  # Root cause analysis
-│   ├── explorer-agent.md            # Codebase discovery
-│   ├── project-planner.md           # Task breakdown
-│   ├── product-manager.md           # Product strategy
-│   ├── product-owner.md             # Backlog prioritization
-│   ├── documentation-writer.md      # Docs (on-demand only)
-│   ├── database-architect.md        # Schema design
-│   ├── penetration-tester.md        # Security testing
-│   ├── code-archaeologist.md        # Legacy code analysis
-│   ├── mobile-developer.md          # ❌ NOT for this project
-│   └── game-developer.md            # ❌ NOT for this project
-│
-├── css/
-│   ├── variables.css                # 98 lines — Design tokens
-│   ├── base.css                     # 183 lines — Reset, a11y, utilities
-│   ├── components.css               # 403 lines — Cards, buttons, badges
-│   ├── layout.css                   # 603 lines — Header, heroes, grids
-│   ├── animations.css               # 196 lines — Keyframes, reveals
-│   ├── checkout.css                 # ~700 lines — Checkout flow
-│   ├── product.css                  # ~530 lines — PDP styles
-│   └── catalog.css                  # ~350 lines — Catalog grids, filters
-│
-├── js/
-│   ├── main.js                      # Landing page (IntersectionObserver, menu)
-│   ├── carousel.js                  # Testimonials carousel
-│   ├── checkout.js                  # Checkout orchestrator (ViaCEP, coupons)
-│   ├── product.js                   # PDP orchestrator (gallery, variants, cart)
-│   ├── catalog.js                   # Catalog orchestrator (filters, pagination)
-│   ├── components/                  # 8 pure-function component modules
-│   │   ├── productCard.js
-│   │   ├── gallery.js
-│   │   ├── sideFilter.js
-│   │   ├── variantSelector.js
-│   │   ├── quantityStepper.js
-│   │   ├── miniCart.js
-│   │   ├── addressForm.js
-│   │   └── orderSummary.js
-│   └── utils/                       # 6 pure utility modules
-│       ├── formatters.js
-│       ├── validators.js
-│       ├── cart.js
-│       ├── badges.js
-│       ├── availability.js
-│       └── queryParams.js
-│
-├── tests/
-│   ├── all-unit-tests.js            # 215 consolidated unit tests
-│   └── components.test.js           # 182 component logic tests
-│
-├── images/                          # 12 AI-generated product/collection PNGs
-├── index.html                       # Landing page (~584 lines)
-├── checkout.html                    # Checkout page (~300 lines)
-├── product.html                     # Product Detail Page (~280 lines)
-├── catalog.html                     # Catalog Page (~300 lines)
-└── ARCHITECTURE.md                  # ← This file
+Step 1: Initialize Vite
+├── npm init -y
+├── npm install -D vite
+├── Create vite.config.js (MPA mode, 4 entry points)
+├── Create .gitignore (node_modules, dist)
+└── Verify: npm run dev serves index.html
+
+Step 2: Move files to Vite structure
+├── css/ → src/css/ (keep structure)
+├── js/ → src/js/ (keep structure)
+├── images/ → public/images/
+├── *.html stays at root (Vite MPA convention)
+└── Update all <link> and <script> paths in HTML
+
+Step 3: Convert <script> tags to ES module entries
+├── Each page gets ONE <script type="module" src="...">
+├── Entry files import their dependencies via ES imports
+└── Remove all other <script> tags from HTML
+
+Step 4: Convert IIFEs to ES Modules
+├── js/utils/*.js → export functions (remove window.*)
+├── js/components/*.js → export functions (remove window.*)
+├── js/main.js → import from utils & components
+├── js/catalog.js → import from utils & components
+├── js/product.js → import from utils & components
+├── js/checkout.js → import from utils & components
+└── Update tests to use ES imports (or keep CommonJS with dual export)
+
+Step 5: Verify
+├── npm run dev — all 4 pages render correctly
+├── npm run build — clean build, no errors
+├── npm run preview — production preview works
+└── node --test tests/ — all 397 tests still pass
+```
+
+**Agent:** `devops-engineer` (project scaffold, `vite.config.js`, `package.json`)
+**Support:** `frontend-specialist` (HTML/CSS path updates, module conversion)
+
+---
+
+### Phase M2: Mobile-First CSS Audit — `mobile-developer` + `frontend-specialist`
+
+> **Goal:** Audit and fix all CSS for touch-first, mobile-first design.
+> **Priority:** 🔴 CRITICAL
+
+```
+Audit Checklist:
+├── All media queries → mobile-first (min-width, not max-width)
+├── Touch targets ≥ 48px on all buttons/links
+├── Thumb-zone analysis (primary CTAs in bottom 1/3)
+├── Viewport meta tag verified on all pages
+├── Font sizes → fluid typography (clamp-based)
+├── Images → responsive (srcset/sizes or CSS object-fit)
+├── Sidebar filter → sheet/drawer on mobile (not inline)
+├── Checkout steps → stacked layout on mobile
+├── Cart drawer → full-width on mobile
+├── Header → collapsible with hamburger (already done)
+├── No horizontal scroll at 320px viewport
+├── Text legible at arm's length (16px minimum body)
+└── Form inputs → type="tel" for CEP, autocomplete attrs
+```
+
+**Agent:** `mobile-developer` (touch audit, thumb zones, gesture patterns)
+**Support:** `frontend-specialist` (CSS implementation)
+
+---
+
+### Phase M3: Vercel Deployment — `devops-engineer`
+
+> **Goal:** Deploy to Vercel with custom domain readiness.
+> **Priority:** 🔴 CRITICAL
+
+```
+Step 1: Create vercel.json
+├── Framework: "vite"
+├── Build command: "npm run build"
+├── Output directory: "dist"
+├── Rewrites for clean URLs
+└── Security headers (CSP, X-Frame, HSTS)
+
+Step 2: Environment Variables
+├── VITE_SITE_URL → for OG/canonical URLs
+├── VITE_GA_ID → Google Analytics (future)
+└── Set in Vercel dashboard
+
+Step 3: Deploy
+├── Connect Git repo to Vercel
+├── Automatic deploys on push to main
+├── Preview deploys on PRs
+└── Verify all 4 pages work in production
+
+Step 4: Performance Baseline
+├── Lighthouse mobile score ≥ 90
+├── Core Web Vitals passing
+├── Image optimization via Vercel Edge
+└── Cache headers configured
+```
+
+**Agent:** `devops-engineer`
+**Support:** `performance-optimizer` (Lighthouse, caching)
+
+---
+
+### Phase M4: Image Optimization Pipeline — `performance-optimizer`
+
+> **Goal:** Reduce page weight by 70%+ with modern image formats.
+> **Priority:** 🟡 HIGH
+
+```
+├── Convert all PNGs → WebP + AVIF (with PNG fallback)
+├── Implement <picture> elements with srcset
+├── Lazy-load below-fold images (loading="lazy")
+├── Responsive sizes (300w, 600w, 900w)
+├── Hero image → preloaded, LCP optimized
+└── Total image budget: < 500KB per page
+```
+
+**Agent:** `performance-optimizer`
+
+---
+
+### Phase M5: Shared Components Extraction — `frontend-specialist`
+
+> **Goal:** Eliminate duplicated HTML (header, footer, cart drawer) across pages.
+> **Priority:** 🟡 HIGH
+
+```
+src/js/shared/
+├── header.js ── Injects header HTML via JS, manages state
+├── footer.js ── Injects footer HTML via JS
+├── cart-badge.js ── Syncs cart count badge across pages
+└── search.js ── Search transition system (shared)
+```
+
+**Rationale:** Currently, header and footer HTML are copy-pasted across 4 pages. With Vite's ES modules, we can extract them into shared modules that inject at runtime, ensuring consistency.
+
+**Agent:** `frontend-specialist`
+
+---
+
+### Phase M6: Test Migration — `test-engineer`
+
+> **Goal:** Migrate 397 tests to Vitest, add E2E baseline.
+> **Priority:** 🟡 HIGH
+
+```
+Step 1: Unit Tests → Vitest
+├── npm install -D vitest
+├── Convert node:test → Vitest syntax (describe/it/expect)
+├── Keep pure-function testing (no DOM)
+├── Verify 397+ tests pass
+└── Add vitest.config.js
+
+Step 2: E2E Tests → Playwright
+├── npm install -D @playwright/test
+├── tests/e2e/smoke.spec.js (P0 — all pages load)
+├── tests/e2e/search.spec.js (search flow)
+├── tests/e2e/catalog.spec.js (filter + add to cart)
+├── tests/e2e/checkout.spec.js (full checkout flow)
+└── tests/e2e/mobile.spec.js (mobile viewport tests)
+```
+
+**Agent:** `test-engineer` (unit), `qa-automation-engineer` (E2E)
+
+---
+
+### Phase M7: PWA & Offline — `mobile-developer` + `frontend-specialist`
+
+> **Goal:** Progressive Web App for installability + offline product browsing.
+> **Priority:** 🟢 MEDIUM (post-launch)
+
+```
+├── manifest.json (icons, theme_color, display: standalone)
+├── Service Worker (vite-plugin-pwa)
+│   ├── Precache: all CSS/JS bundles
+│   ├── Runtime cache: product images (stale-while-revalidate)
+│   └── Offline fallback page
+├── Add to Home Screen prompt
+└── Splash screen (Playful Amethyst themed)
+```
+
+**Agent:** `mobile-developer` (PWA strategy, offline patterns)
+**Support:** `frontend-specialist` (service worker, manifest)
+
+---
+
+### Phase M8: Backend API (Vercel Functions) — `backend-specialist`
+
+> **Goal:** Replace mock data with real API endpoints on Vercel Edge.
+> **Priority:** 🟢 MEDIUM (post-launch)
+
+```
+api/
+├── products.js ──── GET /api/products, GET /api/products/:id
+├── cart.js ──────── POST /api/cart (session-based)
+├── checkout.js ──── POST /api/checkout (validate + Stripe/Pix)
+├── cep.js ──────── GET /api/cep/:cep (proxy to ViaCEP)
+└── coupons.js ──── POST /api/coupons/validate
+```
+
+**Stack:** Vercel Edge Functions (zero cold start)
+**Agent:** `backend-specialist`
+
+---
+
+## 📁 File Map — Current vs Target
+
+```
+CURRENT (Vanilla)                    TARGET (Vite)
+─────────────────                    ─────────────
+amopet/                              amopet/
+├── css/                             ├── src/
+│   ├── variables.css                │   ├── css/
+│   ├── base.css                     │   │   ├── variables.css
+│   ├── components.css               │   │   ├── base.css
+│   ├── layout.css                   │   │   ├── components.css
+│   ├── animations.css               │   │   ├── layout.css
+│   ├── checkout.css                 │   │   ├── animations.css
+│   ├── product.css                  │   │   └── pages/
+│   ├── catalog.css                  │   │       ├── checkout.css
+│   └── miniCart.css                 │   │       ├── product.css
+│                                    │   │       ├── catalog.css
+├── js/                              │   │       └── miniCart.css
+│   ├── main.js                      │   │
+│   ├── carousel.js                  │   └── js/
+│   ├── checkout.js                  │       ├── main.js        ← entry
+│   ├── product.js                   │       ├── catalog.js     ← entry
+│   ├── catalog.js                   │       ├── product.js     ← entry
+│   ├── components/                  │       ├── checkout.js    ← entry
+│   │   ├── productCard.js           │       ├── carousel.js
+│   │   ├── gallery.js               │       ├── components/    (same)
+│   │   ├── sideFilter.js            │       ├── utils/         (same)
+│   │   ├── variantSelector.js       │       └── shared/
+│   │   ├── quantityStepper.js       │           ├── header.js
+│   │   ├── miniCart.js              │           ├── footer.js
+│   │   ├── addressForm.js           │           └── cart-badge.js
+│   │   ├── orderSummary.js          │
+│   │   └── cartDrawer.js           ├── public/
+│   └── utils/                       │   ├── images/           (moved)
+│       ├── formatters.js            │   └── favicon.ico
+│       ├── validators.js            │
+│       ├── cart.js                  ├── index.html            (updated paths)
+│       ├── badges.js                ├── catalog.html          (updated paths)
+│       ├── availability.js          ├── product.html          (updated paths)
+│       └── queryParams.js           ├── checkout.html         (updated paths)
+│                                    │
+├── images/                          ├── vite.config.js
+├── tests/                           ├── vercel.json
+├── index.html                       ├── package.json
+├── catalog.html                     ├── .env
+├── checkout.html                    ├── .gitignore
+├── product.html                     │
+└── ARCHITECTURE.md                  ├── tests/
+                                     │   ├── unit/             (migrated)
+                                     │   └── e2e/              (new)
+                                     │
+                                     └── ARCHITECTURE.md
 ```
 
 ---
@@ -224,323 +450,148 @@ amopet/
 
 ---
 
-## 🔗 Module Dependency Graph
+## 📱 Mobile-First Strategy
 
-```mermaid
-graph TD
-    subgraph Pages
-        INDEX[index.html]
-        CHECKOUT[checkout.html]
-        PDP[product.html]
-        CATALOG[catalog.html]
-    end
+### Core Principles (from `mobile-developer`)
 
-    subgraph Orchestrators
-        MAIN[main.js]
-        CAROUSEL[carousel.js]
-        CHKJS[checkout.js]
-        PDPJS[product.js]
-        CATJS[catalog.js]
-    end
+| # | Principle | Implementation |
+|---|-----------|---------------|
+| 1 | **Touch-first** | All interactive elements ≥ 48px, 12px spacing |
+| 2 | **Thumb zone** | Primary CTAs in bottom 40% of viewport |
+| 3 | **One-hand usage** | Cart drawer, filter sheet accessible from bottom |
+| 4 | **Network-resilient** | Lazy load images, aggressive caching, SW for offline |
+| 5 | **Battery-conscious** | Minimal JS, CSS-only animations where possible |
+| 6 | **Content-first** | Show product grid immediately, defer sidebar |
 
-    subgraph Components
-        PC[productCard]
-        GAL[gallery]
-        SF[sideFilter]
-        VS[variantSelector]
-        QS[quantityStepper]
-        MC[miniCart]
-        AF[addressForm]
-        OS[orderSummary]
-    end
+### Breakpoint Strategy (Mobile-First)
 
-    subgraph Utils
-        FMT[formatters]
-        VAL[validators]
-        CART[cart]
-        BDG[badges]
-        AVL[availability]
-        QP[queryParams]
-    end
+```css
+/* Base styles = mobile (320px+) */
+.grid { grid-template-columns: 1fr; }
 
-    INDEX --> MAIN
-    INDEX --> CAROUSEL
-    CHECKOUT --> CHKJS
-    PDP --> PDPJS
-    CATALOG --> CATJS
+/* Tablet */
+@media (min-width: 768px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
 
-    CHKJS --> QS
-    CHKJS --> AF
-    CHKJS --> OS
-    CHKJS --> CART
-    CHKJS --> FMT
+/* Desktop */
+@media (min-width: 1024px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
 
-    PDPJS --> PC
-    PDPJS --> GAL
-    PDPJS --> VS
-    PDPJS --> QS
-    PDPJS --> MC
-
-    CATJS --> SF
-    CATJS --> PC
-    CATJS --> QP
-    CATJS --> BDG
-    CATJS --> AVL
+/* Wide */
+@media (min-width: 1280px) {
+  .grid { grid-template-columns: repeat(4, 1fr); }
+}
 ```
 
----
+### Mobile-Specific UI Patterns
 
-## ✅ Current Test Coverage
+| Component | Mobile | Desktop |
+|-----------|--------|---------|
+| **Nav** | Hamburger → slide-out drawer | Horizontal links |
+| **Catalog Filters** | Bottom sheet / full-screen modal | Fixed sidebar |
+| **Search** | Full-width expanding bar | Centered 640px bar |
+| **Cart Drawer** | Full-screen slide-up | 400px slide-right |
+| **Product Gallery** | Swipe carousel (touch) | Thumbnails + zoom |
+| **Checkout** | Stacked steps, large inputs | Side-by-side layout |
+| **Footer** | Single column, stacked | 4-column grid |
+
+### Touch Target Validation
 
 ```
-node --test tests/all-unit-tests.js tests/components.test.js
-
-ℹ tests 397 | ℹ suites 78 | ℹ pass 397 | ℹ fail 0
-⏱ duration: ~137ms
+EVERY interactive element MUST satisfy:
+├── width ≥ 48px (CSS)
+├── height ≥ 48px (CSS)
+├── gap ≥ 12px from adjacent targets
+├── visible focus ring on :focus-visible
+└── active state feedback (scale or color change)
 ```
-
-### Unit Tests (215) — `tests/all-unit-tests.js`
-| Module | Tests | Key Areas |
-|--------|-------|-----------|
-| Formatters | 30 | BRL currency, slugs, quantity labels, WhatsApp |
-| Validators | 50 | Email RFC 5322, CEP, coupon, collar sizes |
-| Cart | 40 | Reducer (ADD/REMOVE/UPDATE/COUPON/CLEAR), totals |
-| Badges | 30 | Priority chain (ESGOTADO > PROMO > NOVO > POPULAR) |
-| Availability | 35 | Per-size stock, low stock, cart-add checks |
-| QueryParams | 40 | Parse, build, merge, product filter extraction |
-
-### Component Tests (182) — `tests/components.test.js`
-| Component | Tests | Key Areas |
-|-----------|-------|-----------|
-| ProductCard | 25 | View model, installments, images, interactive state |
-| Gallery | 30 | Navigation, wrap-around, zoom, position clamping |
-| SideFilter | 35 | Toggles, price range, sort, combined applyFilters |
-| VariantSelector | 20 | Cross-ref size↔color, OOS, incompatible clearing |
-| QuantityStepper | 20 | Bounds, step, clamp, aria labels |
-| MiniCart | 15 | View model, empty state, free shipping progress |
-| AddressForm | 25 | Fields, CEP lookup, touched state, BR validation |
-| OrderSummary | 20 | Line items, Pix 5%, delivery estimates, savings |
-
----
-
-## 🗺 Screens Roadmap
-
-### ✅ Completed
-
-| # | Screen | File | Status |
-|---|--------|------|--------|
-| 1 | **Landing Page** | `index.html` | ✅ Complete (8 sections, responsive, a11y) |
-| 2 | **Checkout** | `checkout.html` | ✅ Complete (3 steps, Pix/Card/Boleto, ViaCEP, confetti) |
-| 3 | **Product Detail (PDP)** | `product.html` | ✅ Complete (gallery, variant selector, qty stepper, related, Schema.org) |
-| 4 | **Catalog / Shop** | `catalog.html` | ✅ Complete (grid + side filter, sort, pagination, URL sync) |
-
-### 🔜 Next Screens to Develop
-
-| # | Screen | File | Description | Priority |
-|---|--------|------|-------------|----------|
-| 5 | **Mini-Cart Drawer** | overlay on all pages | Slide-out cart drawer with items, free shipping bar, CTA to checkout | 🟡 MEDIUM |
-| 6 | **Search Results** | `search.html` or overlay | Real-time search with autocomplete, highlighted matches | 🟡 MEDIUM |
-| 7 | **FAQ / Help** | `faq.html` | Accordion FAQ page (trocas, tamanhos, frete, prazos) | 🟢 LOW |
-| 8 | **404 Page** | `404.html` | Branded 404 with lost pet illustration and CTA | 🟢 LOW |
-
----
-
-## 🧪 Test Roadmap
-
-### Next Test Suites to Build
-
-| # | Suite | File | Agent | Priority |
-|---|-------|------|-------|----------|
-| 1 | **Checkout Logic Tests** | `tests/checkout.test.js` | `test-engineer` | 🔴 HIGH |
-| 2 | **PDP Integration Tests** | `tests/product.test.js` | `test-engineer` | 🔴 HIGH |
-| 3 | **Catalog Filter E2E** | `tests/catalog.test.js` | `test-engineer` | 🔴 HIGH |
-| 4 | **E2E Smoke Suite** | `tests/e2e/smoke.spec.js` | `qa-automation-engineer` | 🟡 MEDIUM |
-| 5 | **E2E Checkout Flow** | `tests/e2e/checkout.spec.js` | `qa-automation-engineer` | 🟡 MEDIUM |
-| 6 | **Visual Regression** | `tests/e2e/visual.spec.js` | `qa-automation-engineer` | 🟢 LOW |
-| 7 | **Accessibility Audit** | `tests/a11y.test.js` | `test-engineer` | 🟡 MEDIUM |
-
-### Test Infrastructure Needed
-| Tool | Purpose | Agent |
-|------|---------|-------|
-| Playwright | E2E browser tests | `qa-automation-engineer` |
-| axe-core | WCAG compliance checking | `test-engineer` |
-| Lighthouse CI | Core Web Vitals tracking | `performance-optimizer` |
 
 ---
 
 ## 🤖 Agent Assignment Matrix
 
-### Screen Development
+### Migration Phases
 
-| Screen | Lead Agent | Support Agents |
-|--------|------------|----------------|
-| **Product Detail (PDP)** | `frontend-specialist` | `test-engineer` (unit), `seo-specialist` (schema markup) |
-| **Catalog / Shop** | `frontend-specialist` | `test-engineer` (filter tests), `performance-optimizer` (lazy load) |
-| **Mini-Cart Drawer** | `frontend-specialist` | `test-engineer` (cart state) |
-| **Search Results** | `frontend-specialist` | `performance-optimizer` (debounce, indexing) |
-| **FAQ Page** | `frontend-specialist` | `seo-specialist` (FAQ schema) |
-| **404 Page** | `frontend-specialist` | — |
+| Phase | Lead Agent | Support | Domain |
+|-------|-----------|---------|--------|
+| **M1: Vite Scaffold** | `devops-engineer` | `frontend-specialist` | Build system, project config |
+| **M2: Mobile-First CSS** | `mobile-developer` | `frontend-specialist` | Touch audit, responsive CSS |
+| **M3: Vercel Deploy** | `devops-engineer` | `performance-optimizer` | Deploy config, headers, CDN |
+| **M4: Image Optimization** | `performance-optimizer` | — | WebP/AVIF, srcset, lazy load |
+| **M5: Shared Components** | `frontend-specialist` | — | Header/footer extraction |
+| **M6: Test Migration** | `test-engineer` | `qa-automation-engineer` | Vitest + Playwright |
+| **M7: PWA & Offline** | `mobile-developer` | `frontend-specialist` | Service worker, manifest |
+| **M8: Backend API** | `backend-specialist` | `database-architect` | Vercel Edge Functions |
 
-### Cross-Cutting Concerns
-
-| Task | Lead Agent | Support |
-|------|------------|---------|
-| **Unit & Component Tests** | `test-engineer` | — |
-| **E2E Test Suite (Playwright)** | `qa-automation-engineer` | `devops-engineer` (CI pipeline) |
-| **SEO Optimization** | `seo-specialist` | `frontend-specialist` (implementation) |
-| **Performance Audit** | `performance-optimizer` | `frontend-specialist` (fixes) |
-| **WCAG Accessibility Audit** | `frontend-specialist` | `test-engineer` (axe tests) |
-| **Security Review** | `security-auditor` | `backend-specialist` (if API added) |
-| **API Layer (future)** | `backend-specialist` | `database-architect`, `security-auditor` |
-| **CI/CD Pipeline** | `devops-engineer` | `qa-automation-engineer` (test stage) |
-| **Production Deploy** | `devops-engineer` | `performance-optimizer` (CDN/caching) |
-| **Architecture Decisions** | `orchestrator` | all relevant agents |
-
-### Agent Boundary Rules for AMOPETS
+### Agent Boundaries
 
 | Agent | Owns These Files | ❌ Cannot Touch |
-|-------|------------------|-----------------|
-| `frontend-specialist` | `*.html`, `css/*`, `js/main.js`, `js/checkout.js`, `js/components/*` | `tests/*` |
-| `test-engineer` | `tests/*.test.js`, `tests/*.test.js` | `js/components/*`, `css/*` |
+|-------|------------------|-----------------| 
+| `devops-engineer` | `vite.config.js`, `vercel.json`, `package.json`, `.env`, CI configs | Application code |
+| `frontend-specialist` | `src/css/*`, `src/js/*`, `*.html` | Tests, deploy config |
+| `mobile-developer` | Mobile CSS audit, touch targets, PWA config, responsive patterns | Non-mobile CSS, JS logic |
+| `test-engineer` | `tests/unit/*` | Production code |
 | `qa-automation-engineer` | `tests/e2e/*` | Production code |
-| `seo-specialist` | `<head>` meta tags, schema markup, `robots.txt`, `sitemap.xml` | JS logic, CSS |
-| `performance-optimizer` | Image optimization, critical CSS, lazy loading config | Business logic |
-| `devops-engineer` | `package.json`, CI configs, deploy scripts | Application code |
-| `backend-specialist` | `api/*`, `server/*` (future) | Frontend code |
+| `performance-optimizer` | Image pipeline, critical CSS, lazy loading | Business logic |
+| `backend-specialist` | `api/*` (Vercel functions) | Frontend code |
 
 ---
 
-## 📋 Development Phases
+## ☁️ Vercel Deployment
 
-### Phase 3: Product Detail Page (PDP) — ✅ COMPLETE
+### `vercel.json`
 
-```
-product.html ✅
-├── Gallery (image carousel + zoom) ──→ gallery.js ✅
-├── Product Info (name, price, rating)─→ productCard.js ✅
-├── Variant Selector (size + color) ──→ variantSelector.js ✅
-├── Quantity Stepper ─────────────────→ quantityStepper.js ✅
-├── Add to Cart button ───────────────→ cart.js (localStorage) ✅
-├── Related Products grid (4 items) ✅
-└── Schema.org Product + AggregateRating markup ✅
-```
-
-**Files created:** `product.html`, `css/product.css`, `js/product.js`
-**Catalog:** 8 simulated products, URL-routed via `?p=slug`
-**Test coverage:** `test-engineer` → `tests/product.test.js` (pending)
-
----
-
-### Phase 4: Catalog Page — ✅ COMPLETE
-
-```
-catalog.html ✅
-├── Side Filter Panel ────────────────→ sideFilter.js ✅
-│   ├── Category toggles (3 options) ✅
-│   ├── Size checkboxes (4 options) ✅
-│   └── Color swatches (6 options) ✅
-├── Product Grid ─────────────────────→ JS rendered ✅
-├── Sort Dropdown ────────────────────→ catalog.js ✅
-├── URL sync (filters ↔ queryParams) ─→ queryParams.js ✅
-├── Pagination ───────────────────────→ catalog.js (6 items per page) ✅
-└── Empty state ("nenhum resultado")  ✅
+```json
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}
 ```
 
-**Files created:** `catalog.html`, `css/catalog.css`, `js/catalog.js`
-**Test coverage:** `test-engineer` → `tests/catalog.test.js` (401 tests passing)
+### `vite.config.js` (Target)
 
----
+```javascript
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
 
-### Phase 5: Cart Drawer + Polish — ✅ COMPLETE
-
-```
-All pages
-├── Slide-out mini-cart drawer ────────→ cartDrawer.js ✅
-│   ├── Item list with qty steppers  ✅
-│   ├── Free shipping progress bar ✅
-│   ├── Subtotal ✅
-│   └── CTA → checkout.html ✅
-├── "Add to cart" animations ✅
-└── Cart persistence (localStorage) ✅
-```
-
-**Files created:** `css/miniCart.css`, `js/components/cartDrawer.js`
-
----
-
-### Phase 6: SEO & Performance — ✅ COMPLETE
-
-```
-All pages
-├── Schema.org markup (Product, BreadcrumbList, FAQ) ✅
-├── Open Graph + Twitter Cards ✅
-├── Sitemap.xml + robots.txt ✅
-├── Image optimization (WebP conversion, srcset) ✅
-├── Critical CSS inlining ✅
-├── Lazy loading audit ✅
-├── Core Web Vitals baseline (Lighthouse) ✅
-└── prefers-reduced-motion audit ✅
-```
-
----
-
-### Phase 7: Search & Filter System (UX/UI) — `frontend-specialist`
-
-```
-catalog.html & js/catalog.js
-├── Smart Search Bar (Real-time debounced typeahead)
-├── Robust Filtering Sidebar (Categories, Colors, Sizes, Price)
-├── Empty States & "No Results" UX (Playful Amethyst themed)
-├── URL Search Query Sync (Shareable filter states)
-└── Pagination / Infinite Scroll Orchestration
-```
-
-**Agent assigned:** `frontend-specialist` (Garante a integração fluida, acessível e alinhada à estrita identidade visual "Playful Amethyst" para o painel de pesquisa).
-
----
-
-### Phase 8: E2E Testing — `qa-automation-engineer`
-
-```
-tests/e2e/
-├── smoke.spec.js ──── P0: Landing loads, nav works, images render
-├── checkout.spec.js ── Full checkout flow (cart → address → pay → success)
-├── catalog.spec.js ─── Filter, sort, search, add-to-cart
-├── product.spec.js ─── Gallery, variant selection, qty, add-to-cart
-└── a11y.spec.js ────── Keyboard nav, screen reader, contrast
-```
-
----
-
-### Phase 9: Backend API (Future) — `backend-specialist`
-
-```
-api/
-├── products.js ──── GET /api/products, GET /api/products/:id
-├── cart.js ──────── POST /api/cart, PUT /api/cart/:id, DELETE
-├── checkout.js ──── POST /api/checkout (validate + create order)
-├── cep.js ──────── GET /api/cep/:cep (proxy to ViaCEP)
-└── coupons.js ──── POST /api/coupons/validate
-```
-
-**Stack decision:** To be determined — options: Hono (edge), Fastify, or serverless functions.
-
----
-
-## ⚡ Scripts & Commands
-
-```bash
-# Run all tests (397 passing)
-node --test tests/all-unit-tests.js tests/components.test.js
-
-# Start dev server
-npx http-server -p 3000 -c-1
-
-# Future: E2E tests
-npx playwright test
-
-# Future: Lighthouse audit
-npx lighthouse http://localhost:3000 --output html
+export default defineConfig({
+  root: '.',
+  publicDir: 'public',
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        catalog: resolve(__dirname, 'catalog.html'),
+        product: resolve(__dirname, 'product.html'),
+        checkout: resolve(__dirname, 'checkout.html'),
+      },
+    },
+  },
+  server: {
+    port: 3000,
+    open: true,
+  },
+});
 ```
 
 ---
@@ -550,16 +601,17 @@ npx lighthouse http://localhost:3000 --output html
 ### CSS
 - BEM naming: `.block__element--modifier`
 - Design tokens only (no magic numbers)
-- Mobile-first media queries
+- **Mobile-first** media queries (`min-width` only)
 - `prefers-reduced-motion` support mandatory
 - `focus-visible` rings on all interactive elements
+- Touch targets ≥ 48px on mobile
 
 ### JavaScript
-- Pure functions, immutable state (Object.assign, no mutation)
-- Module pattern with IIFE for page orchestrators
-- CommonJS exports for Node.js test compatibility
-- `var` for ES5 compat, but ES6 features allowed where supported
+- **ES Modules** (`import`/`export`) — no IIFEs, no `window.*` globals
+- Pure functions, immutable state (`Object.assign`, spread)
+- `const`/`let` only (no `var`)
 - Brazilian Portuguese for all user-facing strings
+- Entry point per page imports all its dependencies
 
 ### HTML
 - Semantic HTML5 (`<article>`, `<nav>`, `<section>`, `<aside>`)
@@ -567,19 +619,58 @@ npx lighthouse http://localhost:3000 --output html
 - Every image has descriptive `alt` text
 - `aria-label` on icon buttons
 - `aria-live` on dynamic regions
-- `role` attributes where semantic HTML is insufficient
+- `<script type="module">` for all JS entries
 
 ### Testing
+- **Vitest** for unit tests (fast, ES module native)
+- **Playwright** for E2E tests (cross-browser, mobile viewports)
 - AAA pattern (Arrange → Act → Assert)
 - One assertion focus per test
-- Descriptive `describe` → `it` naming in PT-BR domain terms
-- No external dependencies — Node.js native `node:test` only
-- Tests MUST NOT import DOM APIs (pure logic testing only)
+- Mobile viewport tests mandatory for all E2E specs
 
 ### Accessibility (WCAG 2.1 AA)
 - Color contrast ≥ 4.5:1 for normal text
-- All interactive elements ≥ 44×44px touch target
+- All interactive elements ≥ 48×48px touch target (mobile-developer standard)
 - Keyboard navigation (Tab, Enter, Space, Escape)
 - Skip-to-content link
 - Screen reader announcements via `aria-live`
 - `prefers-reduced-motion` respected
+
+---
+
+## ⚡ Scripts & Commands
+
+### Current (Pre-migration)
+
+```bash
+# Run all tests (397 passing)
+node --test tests/all-unit-tests.js tests/components.test.js
+
+# Start dev server
+npx http-server -p 3000 -c-1
+```
+
+### Target (Post-migration)
+
+```bash
+# Dev server (HMR, auto-reload)
+npm run dev
+
+# Production build
+npm run build
+
+# Preview production build locally
+npm run preview
+
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Lighthouse audit
+npx lighthouse http://localhost:3000 --output html
+
+# Deploy (automatic via Vercel Git integration)
+git push origin main
+```

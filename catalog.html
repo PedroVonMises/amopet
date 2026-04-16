@@ -244,7 +244,7 @@
             </div>
           </div>
           
-          <button class="btn btn-secondary catalog-sidebar__clear" id="btn-clear-filters" style="width: 100%; margin-top: var(--space-md); color: var(--color-purple-primary); border-color: var(--color-purple-primary);">Limpar Filtros</button>
+          <button class="btn btn-secondary catalog-sidebar__clear" id="btn-clear-filters" style="display: block; margin: var(--space-md) auto 0; color: var(--color-purple-primary); border-color: var(--color-purple-primary); font-size: var(--text-sm); padding: var(--space-xs) var(--space-lg);">Limpar Filtros</button>
         </aside>
 
         <!-- Product Grid Area -->
@@ -317,17 +317,110 @@
             <span class="header__logo-text" style="color: #fff;">AM<span style="color: var(--color-yellow-primary);">O</span>PETS</span>
           </a>
           <p class="footer__brand-desc">Passeio com estilo. Amor de verdade. Coleiras exclusivas para cães e gatos que tratamos como filhos.</p>
+
+          <!-- Social Links -->
+          <div class="footer__social">
+            <a href="#" class="footer__social-link" id="social-instagram-cat" aria-label="Instagram AMOPETS">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="#fff" stroke-width="2" fill="none"/>
+                <circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="2" fill="none"/>
+                <circle cx="17.5" cy="6.5" r="1.5" fill="#fff"/>
+              </svg>
+            </a>
+            <a href="#" class="footer__social-link" id="social-tiktok-cat" aria-label="TikTok AMOPETS">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 12a4 4 0 104 4V4a5 5 0 005 5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#" class="footer__social-link" id="social-whatsapp-cat" aria-label="WhatsApp AMOPETS">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
         </div>
 
         <!-- Navigate Column -->
         <div>
           <h4 class="footer__heading">Navegar</h4>
-          <a href="index.html" class="footer__link" id="footer-inicio">Início</a>
-          <a href="catalog.html" class="footer__link" id="footer-coleiras">Coleiras</a>
-          <a href="index.html#trust" class="footer__link" id="footer-sobre">Sobre nós</a>
+          <a href="index.html" class="footer__link" id="footer-inicio-cat">Início</a>
+          <a href="catalog.html" class="footer__link" id="footer-coleiras-cat">Coleiras</a>
+          <a href="index.html#collections" class="footer__link" id="footer-colecoes-cat">Coleções</a>
+          <a href="index.html#trust" class="footer__link" id="footer-sobre-cat">Sobre nós</a>
+        </div>
+
+        <!-- Help Column -->
+        <div>
+          <h4 class="footer__heading">Ajuda</h4>
+          <a href="#" class="footer__link" id="footer-faq-cat">Perguntas frequentes</a>
+          <a href="#" class="footer__link" id="footer-trocas-cat">Trocas e devoluções</a>
+          <a href="#" class="footer__link" id="footer-entregas-cat">Entregas</a>
+          <a href="#" class="footer__link" id="footer-privacidade-cat">Política de privacidade</a>
+        </div>
+
+        <!-- Payment Column -->
+        <div>
+          <h4 class="footer__heading">Aceitamos</h4>
+          <div class="footer__payment" style="gap: 8px;">
+            <div class="footer__payment-icon" aria-label="Pix" title="Pix">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2">
+                <path d="M12 2L2 12l10 10 10-10L12 2zM12 7l-5 5 5 5 5-5-5-5z"/>
+                <circle cx="12" cy="12" r="2" fill="#fff"/>
+              </svg>
+            </div>
+            <div class="footer__payment-icon" aria-label="Visa" title="Visa">
+              <svg viewBox="0 0 40 24" width="32" height="18" fill="#fff">
+                <text x="20" y="17" font-family="'Arial', sans-serif" font-weight="900" font-style="italic" font-size="14" text-anchor="middle">VISA</text>
+              </svg>
+            </div>
+            <div class="footer__payment-icon" aria-label="Mastercard" title="Mastercard">
+              <svg viewBox="0 0 40 24" width="32" height="18" fill="#fff">
+                <circle cx="15" cy="12" r="8" fill-opacity="0.8"/>
+                <circle cx="25" cy="12" r="8" fill-opacity="0.8"/>
+              </svg>
+            </div>
+            <div class="footer__payment-icon" aria-label="Elo" title="Elo">
+              <svg viewBox="0 0 40 24" width="32" height="18" fill="none" stroke="#fff" stroke-width="3">
+                <circle cx="15" cy="12" r="6"/>
+                <circle cx="21" cy="12" r="6"/>
+                <circle cx="27" cy="12" r="6"/>
+              </svg>
+            </div>
+            <div class="footer__payment-icon" aria-label="HiperCard" title="HiperCard">
+              <svg viewBox="0 0 40 24" width="32" height="18" fill="#fff">
+                <text x="20" y="16" font-family="'Arial', sans-serif" font-weight="bold" font-size="10" text-anchor="middle">HIPER</text>
+              </svg>
+            </div>
+            <div class="footer__payment-icon" aria-label="American Express" title="American Express">
+              <svg viewBox="0 0 40 24" width="32" height="18" fill="#fff">
+                <rect x="1" y="2" width="38" height="20" rx="3" fill="none" stroke="#fff" stroke-width="2"/>
+                <text x="20" y="16" font-family="'Arial', sans-serif" font-weight="bold" font-size="9" text-anchor="middle">AMEX</text>
+              </svg>
+            </div>
+            <div class="footer__payment-icon" aria-label="Diners Club" title="Diners Club">
+              <svg viewBox="0 0 40 24" width="32" height="18" fill="#fff">
+                <circle cx="14" cy="12" r="7" fill="none" stroke="#fff" stroke-width="2"/>
+                <circle cx="26" cy="12" r="7" fill="none" stroke="#fff" stroke-width="2"/>
+                <text x="20" y="15" font-family="'Arial', sans-serif" font-weight="bold" font-size="7" text-anchor="middle">DC</text>
+              </svg>
+            </div>
+            <div class="footer__payment-icon" aria-label="Boleto" title="Boleto">
+              <svg viewBox="0 0 32 24" width="24" height="18" fill="#fff">
+                <rect x="0" y="4" width="3" height="16"/>
+                <rect x="5" y="4" width="2" height="16"/>
+                <rect x="9" y="4" width="1" height="16"/>
+                <rect x="12" y="4" width="4" height="16"/>
+                <rect x="18" y="4" width="2" height="16"/>
+                <rect x="22" y="4" width="1" height="16"/>
+                <rect x="25" y="4" width="3" height="16"/>
+                <rect x="30" y="4" width="2" height="16"/>
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
 
+      <!-- Bottom bar -->
       <div class="footer__bottom">
         <p>© 2026 AMOPETS — Feito com 💜 para quem ama seus pets</p>
       </div>
@@ -340,13 +433,13 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/utils/cart.js"></script>
-  <script src="js/components/miniCart.js"></script>
-  <script src="js/components/cartDrawer.js"></script>
-  <script src="js/utils/queryParams.js"></script>
-  <script src="js/components/sideFilter.js"></script>
-  <script src="js/components/productCard.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/catalog.js"></script>
+  <script type="module" src="js/utils/cart.js"></script>
+  <script type="module" src="js/components/miniCart.js"></script>
+  <script type="module" src="js/components/cartDrawer.js"></script>
+  <script type="module" src="js/utils/queryParams.js"></script>
+  <script type="module" src="js/components/sideFilter.js"></script>
+  <script type="module" src="js/components/productCard.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/catalog.js"></script>
 </body>
 </html>

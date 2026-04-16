@@ -103,8 +103,8 @@
       if (elements.sortDropdown) elements.sortDropdown.value = state.filters.sort;
     }
     
-    if (rawParams.q) {
-      state.filters = window.setSearch(state.filters, rawParams.q);
+    if (rawParams.search) {
+      state.filters = window.setSearch(state.filters, rawParams.search);
       if (elements.catalogSearch) elements.catalogSearch.value = state.filters.search;
     }
 

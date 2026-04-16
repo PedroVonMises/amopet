@@ -17,7 +17,7 @@ function createCardViewModel(product) {
   }
 
   var basePrice = product.price;
-  var hasPromo = product.promo && typeof product.promo.rate === 'number' && product.promo.rate > 0;
+  var hasPromo = !!(product.promo && typeof product.promo.rate === 'number' && product.promo.rate > 0);
   var finalPrice = hasPromo ? Math.round(basePrice * (1 - product.promo.rate) * 100) / 100 : basePrice;
   var savings = hasPromo ? Math.round((basePrice - finalPrice) * 100) / 100 : 0;
 

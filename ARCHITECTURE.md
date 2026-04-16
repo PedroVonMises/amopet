@@ -484,7 +484,22 @@ All pages
 
 ---
 
-### Phase 7: E2E Testing — `qa-automation-engineer`
+### Phase 7: Search & Filter System (UX/UI) — `frontend-specialist`
+
+```
+catalog.html & js/catalog.js
+├── Smart Search Bar (Real-time debounced typeahead)
+├── Robust Filtering Sidebar (Categories, Colors, Sizes, Price)
+├── Empty States & "No Results" UX (Playful Amethyst themed)
+├── URL Search Query Sync (Shareable filter states)
+└── Pagination / Infinite Scroll Orchestration
+```
+
+**Agent assigned:** `frontend-specialist` (Garante a integração fluida, acessível e alinhada à estrita identidade visual "Playful Amethyst" para o painel de pesquisa).
+
+---
+
+### Phase 8: E2E Testing — `qa-automation-engineer`
 
 ```
 tests/e2e/
@@ -497,7 +512,7 @@ tests/e2e/
 
 ---
 
-### Phase 8: Backend API (Future) — `backend-specialist`
+### Phase 9: Backend API (Future) — `backend-specialist`
 
 ```
 api/

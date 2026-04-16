@@ -38,6 +38,7 @@
       activeFilters: document.getElementById('active-filters'),
       resultsCount: document.getElementById('results-count'),
       sortDropdown: document.getElementById('sort-dropdown'),
+      catalogSearch: document.getElementById('catalog-search'),
       
       // Sidebar
       sidebar: document.getElementById('catalog-sidebar'),
@@ -101,6 +102,11 @@
       state.filters = window.setSort(state.filters, rawParams.sort);
       if (elements.sortDropdown) elements.sortDropdown.value = state.filters.sort;
     }
+    
+    if (rawParams.q) {
+      state.filters = window.setSearch(state.filters, rawParams.q);
+      if (elements.catalogSearch) elements.catalogSearch.value = state.filters.search;
+    }
 
     state.page = rawParams.page || 1;
 
@@ -129,6 +135,20 @@
       });
     }
 
+    // Search with debounce
+    var searchTimeout;
+    if (elements.catalogSearch) {
+      elements.catalogSearch.addEventListener('input', function(e) {
+        var val = e.target.value;
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+          handleStateChange(function() {
+            state.filters = window.setSearch(state.filters, val);
+          }, true);
+        }, 300);
+      });
+    }
+
     // Filters
     var wrapChange = function(fn) {
       return function(e) {
@@ -151,6 +171,7 @@
       handleStateChange(function() { state.filters = window.clearAllFilters(); }, true);
       syncSidebarInputsToState();
       if (elements.sortDropdown) elements.sortDropdown.value = 'relevance';
+      if (elements.catalogSearch) elements.catalogSearch.value = '';
     };
     if (elements.btnClearFilters) elements.btnClearFilters.addEventListener('click', clearAll);
     if (elements.btnEmptyClear) elements.btnEmptyClear.addEventListener('click', clearAll);
@@ -166,6 +187,10 @@
         if (type === 'cat') state.filters = window.toggleCategory(state.filters, value);
         if (type === 'size') state.filters = window.toggleSize(state.filters, value);
         if (type === 'color') state.filters = window.toggleColor(state.filters, value);
+        if (type === 'search') {
+          state.filters = window.setSearch(state.filters, '');
+          if (elements.catalogSearch) elements.catalogSearch.value = '';
+        }
       }, true);
       syncSidebarInputsToState();
     });
@@ -257,6 +282,7 @@
     if (state.filters.sizes.length) p.size = state.filters.sizes;
     if (state.filters.colors.length) p.color = state.filters.colors;
     if (state.filters.sort !== 'relevance') p.sort = state.filters.sort;
+    if (state.filters.search && state.filters.search.trim().length > 0) p.q = state.filters.search.trim();
     if (state.page > 1) p.page = state.page;
     
     var qs = window.buildQueryString(p);
@@ -318,6 +344,10 @@
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>`;
+
+    if (f.search && f.search.trim().length > 0) {
+      html.push(makePill(`Busca: "${f.search}"`, 'search', ''));
+    }
 
     f.categories.forEach(c => html.push(makePill(`Cat: ${c}`, 'cat', c)));
     f.sizes.forEach(s => html.push(makePill(`Tam: ${s}`, 'size', s)));

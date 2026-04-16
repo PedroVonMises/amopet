@@ -17,6 +17,7 @@
     setupNewsletterForm();
     setupCartSync();
     setupAddToCart();
+    setupSearchTransition();
   }
 
   // ═══════════════════════════════════════════

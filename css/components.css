@@ -101,6 +101,17 @@
   padding: var(--space-lg);
 }
 
+.product-card__name-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.product-card__name-link:hover .product-card__name {
+  color: var(--color-purple-primary);
+  text-decoration: underline;
+}
+
 .product-card__name {
   font-family: var(--font-body);
   font-weight: var(--fw-semibold);
@@ -108,6 +119,7 @@
   color: var(--color-dark);
   margin-bottom: var(--space-xs);
   line-height: var(--lh-snug);
+  transition: color var(--duration-fast);
 }
 
 .product-card__price {

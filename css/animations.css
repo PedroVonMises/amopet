@@ -7,9 +7,12 @@
 
 /* Hero floating product */
 @keyframes heroFloat {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(-50%) translateX(0);
   }
+
   50% {
     transform: translateY(calc(-50% - 15px)) translateX(0);
   }
@@ -17,10 +20,13 @@
 
 /* Paw sparkle */
 @keyframes pawSparkle {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0;
     transform: scale(0.8) rotate(0deg);
   }
+
   50% {
     opacity: 0.6;
     transform: scale(1) rotate(10deg);
@@ -32,6 +38,7 @@
   from {
     stroke-dashoffset: 100;
   }
+
   to {
     stroke-dashoffset: 0;
   }
@@ -43,10 +50,12 @@
     opacity: 0;
     transform: translateY(40px) scale(0.95);
   }
+
   60% {
     opacity: 1;
     transform: translateY(-5px) scale(1.01);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -55,9 +64,12 @@
 
 /* Gentle pulse for badge */
 @keyframes gentlePulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.03);
   }
@@ -67,7 +79,7 @@
 .reveal {
   opacity: 0;
   transform: translateY(30px);
-  transition: 
+  transition:
     opacity var(--duration-slow) var(--ease-smooth),
     transform var(--duration-slow) var(--ease-spring);
 }
@@ -78,24 +90,47 @@
 }
 
 /* Staggered children */
-.reveal-stagger > * {
+.reveal-stagger>* {
   opacity: 0;
   transform: translateY(30px);
-  transition: 
+  transition:
     opacity var(--duration-slow) var(--ease-smooth),
     transform var(--duration-slow) var(--ease-spring);
 }
 
-.reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0ms; }
-.reveal-stagger.revealed > *:nth-child(2) { transition-delay: 80ms; }
-.reveal-stagger.revealed > *:nth-child(3) { transition-delay: 160ms; }
-.reveal-stagger.revealed > *:nth-child(4) { transition-delay: 240ms; }
-.reveal-stagger.revealed > *:nth-child(5) { transition-delay: 320ms; }
-.reveal-stagger.revealed > *:nth-child(6) { transition-delay: 400ms; }
-.reveal-stagger.revealed > *:nth-child(7) { transition-delay: 480ms; }
-.reveal-stagger.revealed > *:nth-child(8) { transition-delay: 560ms; }
+.reveal-stagger.revealed>*:nth-child(1) {
+  transition-delay: 0ms;
+}
 
-.reveal-stagger.revealed > * {
+.reveal-stagger.revealed>*:nth-child(2) {
+  transition-delay: 80ms;
+}
+
+.reveal-stagger.revealed>*:nth-child(3) {
+  transition-delay: 160ms;
+}
+
+.reveal-stagger.revealed>*:nth-child(4) {
+  transition-delay: 240ms;
+}
+
+.reveal-stagger.revealed>*:nth-child(5) {
+  transition-delay: 320ms;
+}
+
+.reveal-stagger.revealed>*:nth-child(6) {
+  transition-delay: 400ms;
+}
+
+.reveal-stagger.revealed>*:nth-child(7) {
+  transition-delay: 480ms;
+}
+
+.reveal-stagger.revealed>*:nth-child(8) {
+  transition-delay: 560ms;
+}
+
+.reveal-stagger.revealed>* {
   opacity: 1;
   transform: translateY(0);
 }
@@ -117,20 +152,40 @@
   animation: drawIn 0.8s var(--ease-smooth) forwards;
 }
 
-.trust-pillar:nth-child(1).revealed .trust-pillar__icon svg { animation-delay: 0.1s; }
-.trust-pillar:nth-child(2).revealed .trust-pillar__icon svg { animation-delay: 0.25s; }
-.trust-pillar:nth-child(3).revealed .trust-pillar__icon svg { animation-delay: 0.4s; }
-.trust-pillar:nth-child(4).revealed .trust-pillar__icon svg { animation-delay: 0.55s; }
+.trust-pillar:nth-child(1).revealed .trust-pillar__icon svg {
+  animation-delay: 0.1s;
+}
+
+.trust-pillar:nth-child(2).revealed .trust-pillar__icon svg {
+  animation-delay: 0.25s;
+}
+
+.trust-pillar:nth-child(3).revealed .trust-pillar__icon svg {
+  animation-delay: 0.4s;
+}
+
+.trust-pillar:nth-child(4).revealed .trust-pillar__icon svg {
+  animation-delay: 0.55s;
+}
 
 /* ─── Logo Paw Blink ─── */
 @keyframes pawBlink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.1); }
+
+  0%,
+  90%,
+  100% {
+    opacity: 1;
+  }
+
+  92%,
+  96% {
+    opacity: 0;
+  }
 }
 
 .logo-paw {
-  animation: pawBlink 4s ease-in-out infinite;
-  transform-origin: center;
+  animation: pawBlink 5s ease-in-out infinite !important;
+  will-change: opacity;
 }
 
 /* ─── Underline grow for nav links ─── */
@@ -147,9 +202,12 @@
 
 /* ─── CTA pulse attention ─── */
 @keyframes ctaAttention {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(255, 210, 63, 0.4);
   }
+
   70% {
     box-shadow: 0 0 0 12px rgba(255, 210, 63, 0);
   }
@@ -164,6 +222,7 @@
    ⚠️  MANDATÓRIO — Reduced Motion
    ═══════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -178,7 +237,7 @@
     transform: none;
   }
 
-  .reveal-stagger > * {
+  .reveal-stagger>* {
     opacity: 1;
     transform: none;
   }

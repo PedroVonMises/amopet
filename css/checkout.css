@@ -748,6 +748,7 @@
   font-family: var(--font-display);
   font-weight: var(--fw-bold);
   font-size: var(--text-base);
+  color: var(--color-yellow-primary);
   display: flex;
   align-items: center;
   gap: var(--space-xs);

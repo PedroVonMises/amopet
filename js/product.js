@@ -232,7 +232,7 @@
       thumbsHtml += '<button class="gallery__thumb' + (isActive ? ' gallery__thumb--active' : '') + '" ' +
         'data-index="' + i + '" role="listitem" aria-label="Foto ' + (i + 1) + ' de ' + nav.total + '"' +
         (isActive ? ' aria-current="true"' : '') + '>' +
-        '<img src="' + img + '" alt="Miniatura ' + (i + 1) + '" width="72" height="72" loading="lazy">' +
+        '<img src="' + img + '" alt="Miniatura ' + (i + 1) + '" width="72" height="72" loading="lazy" decoding="async">' +
         '</button>';
     });
     $('gallery-thumbs').innerHTML = thumbsHtml;
@@ -605,7 +605,7 @@
       var p = CATALOG[slug];
       html += '<a class="related-card" href="product.html?p=' + slug + '" id="related-' + p.id + '">' +
         '<div class="related-card__image">' +
-          '<img src="' + p.images[0] + '" alt="' + p.name + '" width="300" height="300" loading="lazy">' +
+          '<img src="' + p.images[0] + '" alt="' + p.name + '" width="300" height="300" loading="lazy" decoding="async">' +
         '</div>' +
         '<div class="related-card__body">' +
           '<p class="related-card__name">' + p.name + '</p>' +

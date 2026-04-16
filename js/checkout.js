@@ -143,7 +143,7 @@
     state.cart.items.forEach(function (item) {
       var lineTotal = roundTwo(item.price * item.quantity);
       html += '<article class="cart-item" id="cart-item-' + item.id + '">' +
-        '<div class="cart-item__image"><img src="' + (item.image || '') + '" alt="' + item.name + '" width="80" height="80" loading="lazy"></div>' +
+        '<div class="cart-item__image"><img src="' + (item.image || '') + '" alt="' + item.name + '" width="80" height="80" loading="lazy" decoding="async"></div>' +
         '<div class="cart-item__info">' +
           '<p class="cart-item__name">' + item.name + '</p>' +
           '<p class="cart-item__variant">' + (item.variant || '') + '</p>' +

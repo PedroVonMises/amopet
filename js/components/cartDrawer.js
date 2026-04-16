@@ -219,7 +219,7 @@
           return `
             <div class="cart-item">
               <div class="cart-item__image-wrapper">
-                <img src="${img}" alt="${item.name}" class="cart-item__image">
+                <img src="${img}" alt="${item.name}" class="cart-item__image" loading="lazy" decoding="async">
               </div>
               <div class="cart-item__details">
                 <span class="cart-item__brand">Coleira</span>

@@ -339,7 +339,7 @@
         <article class="product-card" data-id="${p.id}">
           <a href="product.html?p=${slug}" class="product-card__image-wrapper">
             ${badge}
-            <img class="product-card__image" src="${p.imageUrl}" alt="${p.name}" loading="lazy" width="400" height="400">
+            <img class="product-card__image" src="${p.imageUrl}" alt="${p.name}" loading="lazy" decoding="async" width="400" height="400">
           </a>
           <div class="product-card__body">
             <a href="product.html?p=${slug}" class="product-card__name-link">

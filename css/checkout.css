@@ -741,7 +741,7 @@
 .summary-card__header {
   padding: var(--space-lg) var(--space-xl);
   background: var(--color-purple-primary);
-  color: #fff;
+  color: var(--color-yellow-primary);
 }
 
 .summary-card__title {

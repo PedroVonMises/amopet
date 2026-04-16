@@ -451,18 +451,20 @@ catalog.html ✅
 
 ---
 
-### Phase 5: Cart Drawer + Polish — `frontend-specialist`
+### Phase 5: Cart Drawer + Polish — ✅ COMPLETE
 
 ```
 All pages
-├── Slide-out mini-cart drawer ────────→ uses js/components/miniCart.js
-│   ├── Item list with qty steppers
-│   ├── Free shipping progress bar
-│   ├── Subtotal
-│   └── CTA → checkout.html
-├── "Add to cart" animations
-└── Cart persistence (localStorage)
+├── Slide-out mini-cart drawer ────────→ cartDrawer.js ✅
+│   ├── Item list with qty steppers  ✅
+│   ├── Free shipping progress bar ✅
+│   ├── Subtotal ✅
+│   └── CTA → checkout.html ✅
+├── "Add to cart" animations ✅
+└── Cart persistence (localStorage) ✅
 ```
+
+**Files created:** `css/miniCart.css`, `js/components/cartDrawer.js`
 
 ---
 

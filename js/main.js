@@ -15,6 +15,8 @@
     setupHeaderScroll();
     setupSmoothScroll();
     setupNewsletterForm();
+    setupCartSync();
+    setupAddToCart();
   }
 
   // ═══════════════════════════════════════════
@@ -182,5 +184,137 @@
         submitBtn.style.background = '';
       }, 2500);
     });
+  }
+  // ═══════════════════════════════════════════
+  // Cart Badge Sync (from localStorage)
+  // ═══════════════════════════════════════════
+  function setupCartSync() {
+    syncCartBadge();
+
+    // Sync when tab becomes visible (user may have added items on another page)
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) syncCartBadge();
+    });
+
+    // Sync across tabs via storage event
+    window.addEventListener('storage', function (e) {
+      if (e.key === 'amopets_cart') syncCartBadge();
+    });
+  }
+
+  function syncCartBadge() {
+    var badge = document.getElementById('cart-count');
+    if (!badge) return;
+
+    var count = 0;
+    try {
+      var saved = localStorage.getItem('amopets_cart');
+      if (saved) {
+        var cart = JSON.parse(saved);
+        if (cart && Array.isArray(cart.items)) {
+          cart.items.forEach(function (item) {
+            count += item.quantity || 0;
+          });
+        }
+      }
+    } catch (e) { /* ignore */ }
+
+    badge.textContent = count;
+    badge.setAttribute('aria-label', count + ' itens no carrinho');
+
+    // Show/hide badge visually
+    badge.style.display = count > 0 ? '' : 'none';
+  }
+
+  // ═══════════════════════════════════════════
+  // Add to Cart (from landing page product cards)
+  // ═══════════════════════════════════════════
+  function setupAddToCart() {
+    var grid = document.getElementById('products-grid');
+    if (!grid) return;
+
+    grid.addEventListener('click', function (e) {
+      var btn = e.target.closest('.product-card__cta');
+      if (!btn) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      var card = btn.closest('.product-card');
+      if (!card) return;
+
+      var item = {
+        id: card.dataset.id || card.id,
+        name: card.dataset.name || 'Produto',
+        price: parseFloat(card.dataset.price) || 0,
+        quantity: 1,
+        image: card.querySelector('.product-card__image') ? card.querySelector('.product-card__image').src : '',
+        variant: 'Padrão',
+      };
+
+      // Add to localStorage cart
+      addItemToCart(item);
+
+      // Animate button
+      var originalText = btn.textContent;
+      btn.textContent = '✓ Adicionado!';
+      btn.style.background = '#27ae60';
+      btn.style.color = '#fff';
+      btn.disabled = true;
+
+      setTimeout(function () {
+        btn.textContent = originalText;
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 1500);
+
+      // Show toast
+      showCartToast();
+
+      // Update badge
+      syncCartBadge();
+    });
+  }
+
+  function addItemToCart(item) {
+    var cart;
+    try {
+      var saved = localStorage.getItem('amopets_cart');
+      cart = saved ? JSON.parse(saved) : { items: [], coupon: null, discountRate: 0 };
+    } catch (e) {
+      cart = { items: [], coupon: null, discountRate: 0 };
+    }
+
+    if (!Array.isArray(cart.items)) cart.items = [];
+
+    // Check if item already exists
+    var found = false;
+    for (var i = 0; i < cart.items.length; i++) {
+      if (cart.items[i].id === item.id) {
+        cart.items[i].quantity += item.quantity;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      cart.items.push(item);
+    }
+
+    try {
+      localStorage.setItem('amopets_cart', JSON.stringify(cart));
+    } catch (e) { /* ignore */ }
+  }
+
+  function showCartToast() {
+    var toast = document.getElementById('cart-toast');
+    if (!toast) return;
+
+    toast.style.transform = 'translateX(0)';
+
+    setTimeout(function () {
+      toast.style.transform = 'translateX(120%)';
+    }, 3500);
   }
 })();

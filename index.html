@@ -35,7 +35,7 @@
   <header class="header" id="header">
     <div class="container header__inner">
       <!-- Logo -->
-      <a href="#" class="header__logo" id="logo" aria-label="AMOPETS - Página inicial">
+      <a href="index.html" class="header__logo" id="logo" aria-label="AMOPETS - Página inicial">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <!-- Paw icon integrated -->
           <circle cx="20" cy="20" r="20" fill="#7B2D8E"/>
@@ -69,14 +69,14 @@
           </svg>
         </button>
         <!-- Cart -->
-        <button class="header__icon-btn" id="btn-cart" aria-label="Carrinho de compras">
+        <a href="checkout.html" class="header__icon-btn" id="btn-cart" aria-label="Carrinho de compras">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
             <line x1="3" y1="6" x2="21" y2="6"/>
             <path d="M16 10a4 4 0 01-8 0"/>
           </svg>
-          <span class="cart-badge" id="cart-count" role="status" aria-live="polite" aria-label="2 itens no carrinho">2</span>
-        </button>
+          <span class="cart-badge" id="cart-count" role="status" aria-live="polite" aria-label="0 itens no carrinho">0</span>
+        </a>
         <!-- Hamburger (mobile) -->
         <button class="header__hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
           <span class="header__hamburger-line"></span>
@@ -147,100 +147,100 @@
 
         <div class="products-grid reveal-stagger" id="products-grid" role="list" aria-label="Lista de coleiras">
           <!-- Product 1 -->
-          <article class="product-card" id="product-1" role="listitem">
-            <div class="product-card__image-wrapper">
+          <article class="product-card" id="product-1" role="listitem" data-slug="coleira-ametista-brilhante" data-name="Coleira Ametista Brilhante" data-price="69.90" data-id="col-001">
+            <a href="product.html?p=coleira-ametista-brilhante" class="product-card__image-wrapper">
               <span class="badge badge--new">NOVO</span>
               <img class="product-card__image" src="images/collar-ametista.png" alt="Coleira Ametista Brilhante - coleira roxa com detalhes dourados" loading="lazy" width="400" height="400">
-            </div>
+            </a>
             <div class="product-card__body">
-              <h3 class="product-card__name">Coleira Ametista Brilhante</h3>
+              <a href="product.html?p=coleira-ametista-brilhante" class="product-card__name-link"><h3 class="product-card__name">Coleira Ametista Brilhante</h3></a>
               <p class="product-card__price">R$ 69,90</p>
               <button class="btn btn-primary btn-small product-card__cta" id="add-product-1" aria-label="Adicionar Coleira Ametista Brilhante ao carrinho">Adicionar 🛒</button>
             </div>
           </article>
 
           <!-- Product 2 -->
-          <article class="product-card" id="product-2">
-            <div class="product-card__image-wrapper">
+          <article class="product-card" id="product-2" data-slug="coleira-girassol-adventure" data-name="Coleira Girassol Adventure" data-price="59.90" data-id="col-002">
+            <a href="product.html?p=coleira-girassol-adventure" class="product-card__image-wrapper">
               <span class="badge badge--popular">🔥 Popular</span>
               <img class="product-card__image" src="images/collar-girassol.png" alt="Coleira Girassol Adventure - coleira amarela esportiva" loading="lazy" width="400" height="400">
-            </div>
+            </a>
             <div class="product-card__body">
-              <h3 class="product-card__name">Coleira Girassol Adventure</h3>
+              <a href="product.html?p=coleira-girassol-adventure" class="product-card__name-link"><h3 class="product-card__name">Coleira Girassol Adventure</h3></a>
               <p class="product-card__price">R$ 59,90</p>
               <button class="btn btn-primary btn-small product-card__cta" id="add-product-2" aria-label="Adicionar Coleira Girassol Adventure ao carrinho">Adicionar 🛒</button>
             </div>
           </article>
 
           <!-- Product 3 -->
-          <article class="product-card" id="product-3">
-            <div class="product-card__image-wrapper">
+          <article class="product-card" id="product-3" data-slug="coleira-lavanda-dreams" data-name="Coleira Lavanda Dreams" data-price="74.90" data-id="col-003">
+            <a href="product.html?p=coleira-lavanda-dreams" class="product-card__image-wrapper">
               <img class="product-card__image" src="images/collar-lavanda.png" alt="Coleira Lavanda Dreams - coleira lilás delicada" loading="lazy" width="400" height="400">
-            </div>
+            </a>
             <div class="product-card__body">
-              <h3 class="product-card__name">Coleira Lavanda Dreams</h3>
+              <a href="product.html?p=coleira-lavanda-dreams" class="product-card__name-link"><h3 class="product-card__name">Coleira Lavanda Dreams</h3></a>
               <p class="product-card__price">R$ 74,90</p>
               <button class="btn btn-primary btn-small product-card__cta" id="add-product-3" aria-label="Adicionar Coleira Lavanda Dreams ao carrinho">Adicionar 🛒</button>
             </div>
           </article>
 
           <!-- Product 4 -->
-          <article class="product-card" id="product-4">
-            <div class="product-card__image-wrapper">
+          <article class="product-card" id="product-4" data-slug="coleira-sunset-glow-led" data-name="Coleira Sunset Glow (LED)" data-price="89.90" data-id="col-004">
+            <a href="product.html?p=coleira-sunset-glow-led" class="product-card__image-wrapper">
               <span class="badge badge--new">NOVO</span>
               <img class="product-card__image" src="images/collar-sunset-led.png" alt="Coleira Sunset Glow com LED - coleira iluminada para passeios noturnos" loading="lazy" width="400" height="400">
-            </div>
+            </a>
             <div class="product-card__body">
-              <h3 class="product-card__name">Coleira Sunset Glow (LED)</h3>
+              <a href="product.html?p=coleira-sunset-glow-led" class="product-card__name-link"><h3 class="product-card__name">Coleira Sunset Glow (LED)</h3></a>
               <p class="product-card__price">R$ 89,90</p>
               <button class="btn btn-primary btn-small product-card__cta" id="add-product-4" aria-label="Adicionar Coleira Sunset Glow ao carrinho">Adicionar 🛒</button>
             </div>
           </article>
 
           <!-- Product 5 -->
-          <article class="product-card" id="product-5">
-            <div class="product-card__image-wrapper">
+          <article class="product-card" id="product-5" data-slug="coleira-vanilla-classic" data-name="Coleira Vanilla Classic" data-price="49.90" data-id="col-005">
+            <a href="product.html?p=coleira-vanilla-classic" class="product-card__image-wrapper">
               <img class="product-card__image" src="images/collar-vanilla.png" alt="Coleira Vanilla Classic - coleira branca clássica em couro" loading="lazy" width="400" height="400">
-            </div>
+            </a>
             <div class="product-card__body">
-              <h3 class="product-card__name">Coleira Vanilla Classic</h3>
+              <a href="product.html?p=coleira-vanilla-classic" class="product-card__name-link"><h3 class="product-card__name">Coleira Vanilla Classic</h3></a>
               <p class="product-card__price">R$ 49,90</p>
               <button class="btn btn-primary btn-small product-card__cta" id="add-product-5" aria-label="Adicionar Coleira Vanilla Classic ao carrinho">Adicionar 🛒</button>
             </div>
           </article>
 
           <!-- Product 6 -->
-          <article class="product-card" id="product-6">
-            <div class="product-card__image-wrapper">
+          <article class="product-card" id="product-6" data-slug="coleira-galaxy-night" data-name="Coleira Galaxy Night" data-price="79.90" data-id="col-006">
+            <a href="product.html?p=coleira-galaxy-night" class="product-card__image-wrapper">
               <img class="product-card__image" src="images/collar-galaxy.png" alt="Coleira Galaxy Night - coleira escura com detalhes de estrelas" loading="lazy" width="400" height="400">
-            </div>
+            </a>
             <div class="product-card__body">
-              <h3 class="product-card__name">Coleira Galaxy Night</h3>
+              <a href="product.html?p=coleira-galaxy-night" class="product-card__name-link"><h3 class="product-card__name">Coleira Galaxy Night</h3></a>
               <p class="product-card__price">R$ 79,90</p>
               <button class="btn btn-primary btn-small product-card__cta" id="add-product-6" aria-label="Adicionar Coleira Galaxy Night ao carrinho">Adicionar 🛒</button>
             </div>
           </article>
 
           <!-- Product 7 -->
-          <article class="product-card" id="product-7">
-            <div class="product-card__image-wrapper">
+          <article class="product-card" id="product-7" data-slug="coleira-tropical-vibes" data-name="Coleira Tropical Vibes" data-price="64.90" data-id="col-007">
+            <a href="product.html?p=coleira-tropical-vibes" class="product-card__image-wrapper">
               <span class="badge badge--popular">🔥 Popular</span>
               <img class="product-card__image" src="images/collar-tropical.png" alt="Coleira Tropical Vibes - coleira colorida com estampa tropical" loading="lazy" width="400" height="400">
-            </div>
+            </a>
             <div class="product-card__body">
-              <h3 class="product-card__name">Coleira Tropical Vibes</h3>
+              <a href="product.html?p=coleira-tropical-vibes" class="product-card__name-link"><h3 class="product-card__name">Coleira Tropical Vibes</h3></a>
               <p class="product-card__price">R$ 64,90</p>
               <button class="btn btn-primary btn-small product-card__cta" id="add-product-7" aria-label="Adicionar Coleira Tropical Vibes ao carrinho">Adicionar 🛒</button>
             </div>
           </article>
 
           <!-- Product 8 -->
-          <article class="product-card" id="product-8">
-            <div class="product-card__image-wrapper">
+          <article class="product-card" id="product-8" data-slug="coleira-marshmallow-soft" data-name="Coleira Marshmallow Soft" data-price="54.90" data-id="col-008">
+            <a href="product.html?p=coleira-marshmallow-soft" class="product-card__image-wrapper">
               <img class="product-card__image" src="images/collar-marshmallow.png" alt="Coleira Marshmallow Soft - coleira rosa acolchoada" loading="lazy" width="400" height="400">
-            </div>
+            </a>
             <div class="product-card__body">
-              <h3 class="product-card__name">Coleira Marshmallow Soft</h3>
+              <a href="product.html?p=coleira-marshmallow-soft" class="product-card__name-link"><h3 class="product-card__name">Coleira Marshmallow Soft</h3></a>
               <p class="product-card__price">R$ 54,90</p>
               <button class="btn btn-primary btn-small product-card__cta" id="add-product-8" aria-label="Adicionar Coleira Marshmallow Soft ao carrinho">Adicionar 🛒</button>
             </div>
@@ -575,6 +575,11 @@
       </div>
     </div>
   </footer>
+
+  <!-- Cart toast notification -->
+  <div class="cart-toast" id="cart-toast" role="alert" aria-live="assertive" style="position:fixed;top:80px;right:24px;z-index:9999;padding:14px 28px;background:#7B2D8E;color:#fff;font-family:'Quicksand',sans-serif;font-weight:700;font-size:14px;border-radius:50px;box-shadow:0 8px 32px rgba(123,45,142,0.3);display:flex;align-items:center;gap:8px;transform:translateX(120%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);">
+    ✅ Adicionado ao carrinho! <a href="checkout.html" style="color:#FFD23F;text-decoration:underline;">Ver carrinho →</a>
+  </div>
 
   <!-- Scripts -->
   <script src="js/main.js"></script>

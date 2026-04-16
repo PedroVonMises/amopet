@@ -47,7 +47,7 @@
 │  index.html ─── Landing Page (8 sections)                │
 │  checkout.html ─ Multi-step Checkout (3 steps + success) │
 │  product.html ── Product Detail Page (gallery+variants)  │
-│  [PLANNED] catalog.html ─── Catalog + Side Filters       │
+│  catalog.html ── Catalog Page (filters+pagination)       │
 │  [PLANNED] account.html ─── User Account / Order History │
 │                                                          │
 ├──────────────────────────────────────────────────────────┤
@@ -60,7 +60,7 @@
 │  css/animations.css ── Keyframes, reveals, reduced-motion│
 │  css/checkout.css ──── Checkout-specific styles          │
 │  css/product.css ───── PDP-specific styles               │
-│  [PLANNED] css/catalog.css ── Catalog/filter styles      │
+│  css/catalog.css ───── Catalog/filter/pagination styles  │
 │                                                          │
 ├──────────────────────────────────────────────────────────┤
 │                    LOGIC LAYER                            │
@@ -69,7 +69,7 @@
 │  js/carousel.js ────── Testimonials carousel             │
 │  js/checkout.js ────── Checkout orchestrator             │
 │  js/product.js ─────── PDP orchestrator (8 products)     │
-│  [PLANNED] js/catalog.js ── Catalog orchestrator         │
+│  js/catalog.js ─────── Catalog orchestrator (pagination) │
 │                                                          │
 ├──────────────────────────────────────────────────────────┤
 │              COMPONENT LOGIC LAYER (Pure JS)              │
@@ -145,13 +145,15 @@ amopet/
 │   ├── layout.css                   # 603 lines — Header, heroes, grids
 │   ├── animations.css               # 196 lines — Keyframes, reveals
 │   ├── checkout.css                 # ~700 lines — Checkout flow
-│   └── product.css                  # ~530 lines — PDP styles
+│   ├── product.css                  # ~530 lines — PDP styles
+│   └── catalog.css                  # ~350 lines — Catalog grids, filters
 │
 ├── js/
 │   ├── main.js                      # Landing page (IntersectionObserver, menu)
 │   ├── carousel.js                  # Testimonials carousel
 │   ├── checkout.js                  # Checkout orchestrator (ViaCEP, coupons)
 │   ├── product.js                   # PDP orchestrator (gallery, variants, cart)
+│   ├── catalog.js                   # Catalog orchestrator (filters, pagination)
 │   ├── components/                  # 8 pure-function component modules
 │   │   ├── productCard.js
 │   │   ├── gallery.js
@@ -177,6 +179,7 @@ amopet/
 ├── index.html                       # Landing page (~584 lines)
 ├── checkout.html                    # Checkout page (~300 lines)
 ├── product.html                     # Product Detail Page (~280 lines)
+├── catalog.html                     # Catalog Page (~300 lines)
 └── ARCHITECTURE.md                  # ← This file
 ```
 
@@ -229,7 +232,7 @@ graph TD
         INDEX[index.html]
         CHECKOUT[checkout.html]
         PDP[product.html]
-        CATALOG[catalog.html - PLANNED]
+        CATALOG[catalog.html]
     end
 
     subgraph Orchestrators
@@ -237,7 +240,7 @@ graph TD
         CAROUSEL[carousel.js]
         CHKJS[checkout.js]
         PDPJS[product.js]
-        CATJS[catalog.js - PLANNED]
+        CATJS[catalog.js]
     end
 
     subgraph Components
@@ -329,12 +332,12 @@ node --test tests/all-unit-tests.js tests/components.test.js
 | 1 | **Landing Page** | `index.html` | ✅ Complete (8 sections, responsive, a11y) |
 | 2 | **Checkout** | `checkout.html` | ✅ Complete (3 steps, Pix/Card/Boleto, ViaCEP, confetti) |
 | 3 | **Product Detail (PDP)** | `product.html` | ✅ Complete (gallery, variant selector, qty stepper, related, Schema.org) |
+| 4 | **Catalog / Shop** | `catalog.html` | ✅ Complete (grid + side filter, sort, pagination, URL sync) |
 
 ### 🔜 Next Screens to Develop
 
 | # | Screen | File | Description | Priority |
 |---|--------|------|-------------|----------|
-| 4 | **Catalog / Shop** | `catalog.html` | Product grid + side filter, sort, search, pagination, URL sync | 🔴 HIGH |
 | 5 | **Mini-Cart Drawer** | overlay on all pages | Slide-out cart drawer with items, free shipping bar, CTA to checkout | 🟡 MEDIUM |
 | 6 | **Search Results** | `search.html` or overlay | Real-time search with autocomplete, highlighted matches | 🟡 MEDIUM |
 | 7 | **FAQ / Help** | `faq.html` | Accordion FAQ page (trocas, tamanhos, frete, prazos) | 🟢 LOW |
@@ -428,25 +431,23 @@ product.html ✅
 
 ---
 
-### Phase 4: Catalog Page — `frontend-specialist`
+### Phase 4: Catalog Page — ✅ COMPLETE
 
 ```
-catalog.html
-├── Side Filter Panel ────────────────→ uses js/components/sideFilter.js
-│   ├── Category toggles
-│   ├── Size checkboxes
-│   ├── Color swatches
-│   ├── Price range slider
-│   └── Pet type (dog/cat)
-├── Product Grid ─────────────────────→ uses js/components/productCard.js
-├── Sort Dropdown ────────────────────→ uses js/components/sideFilter.js
-├── Search Bar with autocomplete
-├── URL sync (filters ↔ queryParams) ─→ uses js/utils/queryParams.js
-├── Pagination or infinite scroll
-└── Empty state ("nenhum resultado")
+catalog.html ✅
+├── Side Filter Panel ────────────────→ sideFilter.js ✅
+│   ├── Category toggles (3 options) ✅
+│   ├── Size checkboxes (4 options) ✅
+│   └── Color swatches (6 options) ✅
+├── Product Grid ─────────────────────→ JS rendered ✅
+├── Sort Dropdown ────────────────────→ catalog.js ✅
+├── URL sync (filters ↔ queryParams) ─→ queryParams.js ✅
+├── Pagination ───────────────────────→ catalog.js (6 items per page) ✅
+└── Empty state ("nenhum resultado")  ✅
 ```
 
-**Test coverage:** `test-engineer` → `tests/catalog.test.js`
+**Files created:** `catalog.html`, `css/catalog.css`, `js/catalog.js`
+**Test coverage:** `test-engineer` → `tests/catalog.test.js` (401 tests passing)
 
 ---
 

@@ -1,0 +1,402 @@
+/* ═══════════════════════════════════════════════════════
+   AMOPETS — Components (components.css)
+   Cards, buttons, badges, inputs
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-xl);
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-base);
+  border-radius: var(--radius-pill);
+  transition: all var(--duration-normal) var(--ease-spring);
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 48px;
+  min-width: 44px;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--color-yellow-primary);
+  color: var(--color-purple-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-yellow);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-white);
+  border: 2px solid var(--color-white);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-white);
+  color: var(--color-purple-dark);
+  transform: scale(1.05);
+}
+
+.btn-secondary:active {
+  transform: scale(0.97);
+}
+
+.btn-small {
+  padding: var(--space-xs) var(--space-lg);
+  font-size: var(--text-sm);
+  min-height: 40px;
+}
+
+/* ─── Product Cards ─── */
+.product-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-spring);
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.product-card__image-wrapper {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--color-gray);
+  padding: var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-card__image {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  transition: transform var(--duration-normal) var(--ease-spring);
+}
+
+.product-card:hover .product-card__image {
+  transform: scale(1.08);
+}
+
+.product-card__body {
+  padding: var(--space-lg);
+}
+
+.product-card__name {
+  font-family: var(--font-body);
+  font-weight: var(--fw-semibold);
+  font-size: var(--text-base);
+  color: var(--color-dark);
+  margin-bottom: var(--space-xs);
+  line-height: var(--lh-snug);
+}
+
+.product-card__price {
+  font-family: var(--font-accent);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-lg);
+  color: var(--color-purple-dark);
+  margin-bottom: var(--space-md);
+}
+
+.product-card__cta {
+  width: 100%;
+}
+
+/* ─── Badges ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2xs) var(--space-sm);
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-bold);
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  z-index: var(--z-base);
+}
+
+.badge--new {
+  background-color: var(--color-yellow-primary);
+  color: var(--color-purple-dark);
+}
+
+.badge--popular {
+  background-color: var(--color-purple-primary);
+  color: #ffffff;
+}
+
+.badge--promo {
+  background-color: var(--color-yellow-light);
+  color: var(--color-purple-dark);
+}
+
+/* ─── Collection Cards ─── */
+.collection-card {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+  transition: transform var(--duration-normal) var(--ease-spring);
+}
+
+.collection-card:hover {
+  transform: scale(1.02);
+}
+
+.collection-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-smooth);
+}
+
+.collection-card:hover .collection-card__image {
+  transform: scale(1.08);
+}
+
+.collection-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(74, 18, 89, 0.85) 0%,
+    rgba(74, 18, 89, 0.4) 40%,
+    transparent 100%
+  );
+  transition: background var(--duration-normal) var(--ease-smooth);
+}
+
+.collection-card:hover .collection-card__overlay {
+  background: linear-gradient(
+    to top,
+    rgba(74, 18, 89, 0.7) 0%,
+    rgba(74, 18, 89, 0.2) 40%,
+    transparent 100%
+  );
+}
+
+.collection-card__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-xl);
+  z-index: var(--z-base);
+}
+
+.collection-card__name {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--fw-bold);
+  color: var(--color-yellow-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.collection-card__desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ─── Testimonial Cards ─── */
+.testimonial-card {
+  flex: 0 0 auto;
+  width: 320px;
+  background: var(--color-gray);
+  border-radius: var(--radius-card);
+  padding: var(--space-xl);
+  scroll-snap-align: start;
+}
+
+.testimonial-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.testimonial-card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-circle);
+  background: var(--color-purple-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xl);
+  flex-shrink: 0;
+}
+
+.testimonial-card__name {
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-sm);
+  color: var(--color-dark);
+}
+
+.testimonial-card__pet {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-purple-primary);
+  font-weight: var(--fw-medium);
+}
+
+.testimonial-card__stars {
+  color: var(--color-yellow-primary);
+  font-size: var(--text-base);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 2px;
+}
+
+.testimonial-card__text {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-dark);
+  line-height: var(--lh-normal);
+  opacity: 0.85;
+}
+
+/* ─── Trust Pillars ─── */
+.trust-pillar {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+}
+
+.trust-pillar__icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-yellow-light);
+  border-radius: var(--radius-lg);
+  color: var(--color-purple-primary);
+}
+
+.trust-pillar__icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--color-purple-primary);
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trust-pillar__title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-base);
+  color: var(--color-dark);
+  margin-bottom: var(--space-2xs);
+}
+
+.trust-pillar__desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-dark);
+  opacity: 0.75;
+  line-height: var(--lh-normal);
+}
+
+/* ─── Newsletter Input ─── */
+.newsletter-form {
+  display: flex;
+  max-width: 500px;
+  margin-inline: auto;
+  background: #ffffff;
+  border-radius: var(--radius-pill);
+  padding: 5px;
+  box-shadow: var(--shadow-lg);
+}
+
+.newsletter-form__input {
+  flex: 1;
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  background: transparent;
+  min-width: 0;
+}
+
+.newsletter-form__input::placeholder {
+  color: var(--color-purple-light);
+}
+
+.newsletter-form__btn {
+  padding: var(--space-sm) var(--space-xl);
+  background: var(--color-yellow-primary);
+  color: var(--color-purple-dark);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-base);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-spring);
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.newsletter-form__btn:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-yellow);
+}
+
+.newsletter-form__btn:active {
+  transform: scale(0.97);
+}
+
+/* ─── Cart Badge ─── */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: var(--color-yellow-primary);
+  color: var(--color-purple-dark);
+  font-family: var(--font-accent);
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  border-radius: var(--radius-circle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ─── Section Title ─── */
+.section-title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  color: var(--color-purple-primary);
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}

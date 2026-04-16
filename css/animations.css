@@ -1,0 +1,195 @@
+/* ═══════════════════════════════════════════════════════
+   AMOPETS — Animations (animations.css)
+   Keyframes, reveals, hovers, reduced-motion
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Keyframes ─── */
+
+/* Hero floating product */
+@keyframes heroFloat {
+  0%, 100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(calc(-50% - 15px)) translateX(0);
+  }
+}
+
+/* Paw sparkle */
+@keyframes pawSparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1) rotate(10deg);
+  }
+}
+
+/* Draw-on effect for trust icons */
+@keyframes drawIn {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Bounce in (for hero content) */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Gentle pulse for badge */
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+/* ─── Scroll Reveal System ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: 
+    opacity var(--duration-slow) var(--ease-smooth),
+    transform var(--duration-slow) var(--ease-spring);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: 
+    opacity var(--duration-slow) var(--ease-smooth),
+    transform var(--duration-slow) var(--ease-spring);
+}
+
+.reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger.revealed > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger.revealed > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-stagger.revealed > *:nth-child(4) { transition-delay: 240ms; }
+.reveal-stagger.revealed > *:nth-child(5) { transition-delay: 320ms; }
+.reveal-stagger.revealed > *:nth-child(6) { transition-delay: 400ms; }
+.reveal-stagger.revealed > *:nth-child(7) { transition-delay: 480ms; }
+.reveal-stagger.revealed > *:nth-child(8) { transition-delay: 560ms; }
+
+.reveal-stagger.revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Hero Entrance ─── */
+.hero__content {
+  animation: bounceIn 0.8s var(--ease-spring) 0.2s both;
+}
+
+.hero__badge {
+  animation: gentlePulse 3s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+/* ─── Trust Icon Draw-In ─── */
+.trust-pillar.revealed .trust-pillar__icon svg {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawIn 0.8s var(--ease-smooth) forwards;
+}
+
+.trust-pillar:nth-child(1).revealed .trust-pillar__icon svg { animation-delay: 0.1s; }
+.trust-pillar:nth-child(2).revealed .trust-pillar__icon svg { animation-delay: 0.25s; }
+.trust-pillar:nth-child(3).revealed .trust-pillar__icon svg { animation-delay: 0.4s; }
+.trust-pillar:nth-child(4).revealed .trust-pillar__icon svg { animation-delay: 0.55s; }
+
+/* ─── Logo Paw Blink ─── */
+@keyframes pawBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+.logo-paw {
+  animation: pawBlink 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* ─── Underline grow for nav links ─── */
+/* Already defined in layout.css via ::after pseudo-element */
+
+/* ─── Card hover micro animation ─── */
+.product-card {
+  will-change: transform;
+}
+
+.collection-card {
+  will-change: transform;
+}
+
+/* ─── CTA pulse attention ─── */
+@keyframes ctaAttention {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 210, 63, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 210, 63, 0);
+  }
+}
+
+.hero .btn-primary {
+  animation: ctaAttention 2.5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ⚠️  MANDATÓRIO — Reduced Motion
+   ═══════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal-stagger > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero__floating-product {
+    animation: none;
+    opacity: 0.15;
+  }
+
+  .hero__paw {
+    animation: none;
+    opacity: 0.3;
+  }
+}

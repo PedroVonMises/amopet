@@ -121,7 +121,7 @@ describe('formatPriceCompact', () => {
 
 describe('formatSlug', () => {
   it('should create slug from product name', () => {
-    assert.equal(formatSlug('Coleira Ametista Brilhante'), 'coleira-ametista-brilhante');
+    assert.equal(formatSlug('Coleira Deepblue'), 'coleira-deepblue');
   });
   it('should remove accents', () => {
     assert.equal(formatSlug('Coleção Verão Edição'), 'colecao-verao-edicao');
@@ -130,7 +130,7 @@ describe('formatSlug', () => {
     assert.equal(formatSlug('Coleira (LED) Night!'), 'coleira-led-night');
   });
   it('should collapse multiple spaces/hyphens', () => {
-    assert.equal(formatSlug('Coleira   --  Galaxy'), 'coleira-galaxy');
+    assert.equal(formatSlug('Coleira   --  Deepgreen'), 'coleira-deepgreen');
   });
   it('should trim whitespace', () => {
     assert.equal(formatSlug('  Coleira Soft  '), 'coleira-soft');
@@ -395,7 +395,7 @@ describe('validateCollarSize', () => {
    ║  3. CART REDUCER & PRICE CALCULATION                          ║
    ╚═══════════════════════════════════════════════════════════════╝ */
 
-const coleira1 = { id: 'col-001', name: 'Coleira Ametista', price: 69.90 };
+const coleira1 = { id: 'col-001', name: 'Coleira Deepblue', price: 69.90 };
 const coleira2 = { id: 'col-002', name: 'Coleira Girassol', price: 59.90 };
 const coleira3 = { id: 'col-003', name: 'Coleira Sunset LED', price: 89.90 };
 
@@ -787,7 +787,7 @@ describe('parseQueryParams', () => {
   it('should handle query string without leading ?', () => { assert.deepEqual(parseQueryParams('color=roxo&price=69'), { color: 'roxo', price: '69' }); });
   it('should handle empty query string', () => { assert.deepEqual(parseQueryParams(''), {}); assert.deepEqual(parseQueryParams('?'), {}); });
   it('should handle key without value', () => { assert.deepEqual(parseQueryParams('?featured'), { featured: '' }); });
-  it('should decode URI components', () => { const r = parseQueryParams('?q=coleira%20ametista&tag=%F0%9F%94%A5'); assert.equal(r.q, 'coleira ametista'); assert.equal(r.tag, '🔥'); });
+  it('should decode URI components', () => { const r = parseQueryParams('?q=coleira%20deepblue&tag=%F0%9F%94%A5'); assert.equal(r.q, 'coleira deepblue'); assert.equal(r.tag, '🔥'); });
   it('should handle duplicate keys as arrays', () => { assert.deepEqual(parseQueryParams('?color=roxo&color=amarelo&color=rosa').color, ['roxo', 'amarelo', 'rosa']); });
   it('should handle two duplicate keys as array', () => { assert.deepEqual(parseQueryParams('?size=P&size=M').size, ['P', 'M']); });
   it('should skip empty pairs (double &)', () => { assert.deepEqual(parseQueryParams('?a=1&&b=2'), { a: '1', b: '2' }); });
@@ -798,7 +798,7 @@ describe('parseQueryParams', () => {
 
 describe('buildQueryString', () => {
   it('should build from simple object', () => { assert.equal(buildQueryString({ category: 'coleiras', size: 'M' }), 'category=coleiras&size=M'); });
-  it('should encode special characters', () => { assert.equal(buildQueryString({ q: 'coleira ametista' }), 'q=coleira%20ametista'); });
+  it('should encode special characters', () => { assert.equal(buildQueryString({ q: 'coleira deepblue' }), 'q=coleira%20deepblue'); });
   it('should handle array values', () => { assert.equal(buildQueryString({ color: ['roxo', 'amarelo'] }), 'color=roxo&color=amarelo'); });
   it('should convert numbers to strings', () => { assert.equal(buildQueryString({ page: 2, price: 69.90 }), 'page=2&price=69.9'); });
   it('should skip null/undefined values', () => { assert.equal(buildQueryString({ a: 'keep', b: null, c: undefined, d: 'also' }), 'a=keep&d=also'); });
@@ -807,13 +807,13 @@ describe('buildQueryString', () => {
 });
 
 describe('parseProductFilters', () => {
-  it('should parse full filter query', () => { const r = parseProductFilters('?category=coleiras&size=M&sort=price-asc&page=2&q=ametista'); assert.equal(r.category, 'coleiras'); assert.equal(r.size, 'M'); assert.equal(r.sort, 'price-asc'); assert.equal(r.page, 2); assert.equal(r.search, 'ametista'); });
+  it('should parse full filter query', () => { const r = parseProductFilters('?category=coleiras&size=M&sort=price-asc&page=2&q=deepblue'); assert.equal(r.category, 'coleiras'); assert.equal(r.size, 'M'); assert.equal(r.sort, 'price-asc'); assert.equal(r.page, 2); assert.equal(r.search, 'deepblue'); });
   it('should default sort to "relevance"', () => { assert.equal(parseProductFilters('?category=coleiras').sort, 'relevance'); });
   it('should default page to 1', () => { assert.equal(parseProductFilters('?category=coleiras').page, 1); });
   it('should parse price range', () => { const r = parseProductFilters('?priceMin=50&priceMax=100'); assert.equal(r.priceMin, 50); assert.equal(r.priceMax, 100); });
   it('should return nulls for missing optional params', () => { const r = parseProductFilters(''); assert.equal(r.category, null); assert.equal(r.size, null); assert.equal(r.color, null); assert.equal(r.priceMin, null); assert.equal(r.priceMax, null); assert.equal(r.search, null); });
-  it('should handle "search" as alias for "q"', () => { assert.equal(parseProductFilters('?search=galaxy').search, 'galaxy'); });
-  it('should prefer "q" over "search"', () => { assert.equal(parseProductFilters('?q=ametista&search=galaxy').search, 'ametista'); });
+  it('should handle "search" as alias for "q"', () => { assert.equal(parseProductFilters('?search=deepgreen').search, 'deepgreen'); });
+  it('should prefer "q" over "search"', () => { assert.equal(parseProductFilters('?q=deepblue&search=deepgreen').search, 'deepblue'); });
   it('should parse float prices', () => { const r = parseProductFilters('?priceMin=49.90&priceMax=89.90'); assert.equal(r.priceMin, 49.90); assert.equal(r.priceMax, 89.90); });
 });
 

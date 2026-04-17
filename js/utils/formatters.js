@@ -41,7 +41,7 @@ export function formatPriceCompact(value) {
 
 /**
  * Format a product name for URL slug
- * e.g. "Coleira Ametista Brilhante" → "coleira-ametista-brilhante"
+ * e.g. "Coleira Deepblue" → "coleira-deepblue"
  * @param {string} name
  * @returns {string}
  */

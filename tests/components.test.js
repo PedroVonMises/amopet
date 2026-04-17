@@ -33,19 +33,19 @@ const { createOrderSummary, validateOrder, getPaymentMethodInfo, calculateSaving
    ╚═══════════════════════════════════════════════════════════════╝ */
 
 describe('ProductCard — createCardViewModel', () => {
-  const baseProduct = { id: 'col-001', name: 'Coleira Ametista Brilhante', price: 69.90, imageUrl: '/img/ametista.png' };
+  const baseProduct = { id: 'col-001', name: 'Coleira Deepblue', price: 69.90, imageUrl: '/img/deepblue.png' };
 
   it('should create view model with required fields', () => {
     const vm = createCardViewModel(baseProduct);
     assert.equal(vm.id, 'col-001');
-    assert.equal(vm.name, 'Coleira Ametista Brilhante');
-    assert.equal(vm.slug, 'coleira-ametista-brilhante');
+    assert.equal(vm.name, 'Coleira Deepblue');
+    assert.equal(vm.slug, 'coleira-deepblue');
     assert.equal(vm.basePrice, 69.90);
     assert.equal(vm.finalPrice, 69.90);
     assert.equal(vm.hasDiscount, false);
     assert.equal(vm.savings, 0);
     assert.equal(vm.isAvailable, true);
-    assert.equal(vm.imageUrl, '/img/ametista.png');
+    assert.equal(vm.imageUrl, '/img/deepblue.png');
   });
 
   it('should calculate discounted price on promo', () => {
@@ -72,7 +72,7 @@ describe('ProductCard — createCardViewModel', () => {
   });
 
   it('should use name as default imageAlt', () => {
-    assert.equal(createCardViewModel(baseProduct).imageAlt, 'Coleira Ametista Brilhante');
+    assert.equal(createCardViewModel(baseProduct).imageAlt, 'Coleira Deepblue');
   });
 
   it('should throw for null product', () => {
@@ -419,8 +419,8 @@ describe('SideFilter — setSort', () => {
 describe('SideFilter — setSearch / setPetType', () => {
   it('should set search term', () => {
     let s = createFilterState();
-    s = setSearch(s, '  ametista  ');
-    assert.equal(s.search, 'ametista');
+    s = setSearch(s, '  deepblue  ');
+    assert.equal(s.search, 'deepblue');
   });
   it('should set pet type', () => {
     let s = createFilterState();
@@ -455,7 +455,7 @@ describe('SideFilter — getActiveFilterCount / hasActiveFilters', () => {
     assert.equal(getActiveFilterCount(s), 1);
   });
   it('should count search', () => {
-    let s = setSearch(createFilterState(), 'galaxy');
+    let s = setSearch(createFilterState(), 'deepgreen');
     assert.equal(getActiveFilterCount(s), 1);
     assert.equal(hasActiveFilters(s), true);
   });
@@ -480,9 +480,9 @@ describe('SideFilter — clearAllFilters', () => {
 
 describe('SideFilter — applyFilters', () => {
   const products = [
-    { id: '1', name: 'Coleira Ametista', price: 69.90, category: 'coleiras', sizes: ['P', 'M', 'G'], colors: ['roxo'], petType: 'dog', salesCount: 100, createdAt: '2026-04-01' },
+    { id: '1', name: 'Coleira Deepblue', price: 69.90, category: 'coleiras', sizes: ['P', 'M', 'G'], colors: ['roxo'], petType: 'dog', salesCount: 100, createdAt: '2026-04-01' },
     { id: '2', name: 'Coleira Girassol', price: 59.90, category: 'coleiras', sizes: ['M', 'G'], colors: ['amarelo'], petType: 'dog', salesCount: 50, createdAt: '2026-03-01' },
-    { id: '3', name: 'Coleira Galaxy Night', price: 79.90, category: 'coleiras-led', sizes: ['P', 'M'], colors: ['roxo'], petType: 'cat', salesCount: 75, createdAt: '2026-04-10' },
+    { id: '3', name: 'Coleira Deepgreen', price: 79.90, category: 'coleiras-led', sizes: ['P', 'M'], colors: ['roxo'], petType: 'cat', salesCount: 75, createdAt: '2026-04-10' },
     { id: '4', name: 'Coleira Sunset LED', price: 89.90, category: 'coleiras-led', sizes: ['G', 'GG'], colors: ['laranja'], petType: 'dog', salesCount: 30, createdAt: '2026-02-01' },
   ];
 
@@ -509,7 +509,7 @@ describe('SideFilter — applyFilters', () => {
   it('should filter by price range', () => {
     let s = setPriceRange(createFilterState(), 70, 100);
     const result = applyFilters(products, s);
-    assert.equal(result.length, 2); // Galaxy 79.90, Sunset 89.90
+    assert.equal(result.length, 2); // Deepgreen 79.90, Sunset 89.90
   });
   it('should filter by pet type', () => {
     let s = setPetType(createFilterState(), 'cat');
@@ -518,7 +518,7 @@ describe('SideFilter — applyFilters', () => {
     assert.equal(result[0].id, '3');
   });
   it('should filter by search term in name', () => {
-    let s = setSearch(createFilterState(), 'galaxy');
+    let s = setSearch(createFilterState(), 'deepgreen');
     const result = applyFilters(products, s);
     assert.equal(result.length, 1);
     assert.equal(result[0].id, '3');
@@ -812,7 +812,7 @@ describe('QuantityStepper — getStepperAriaLabel', () => {
 
 describe('MiniCart — createMiniCartViewModel', () => {
   it('should create view model for cart with items', () => {
-    const cart = { items: [{ id: '1', name: 'Ametista', price: 69.90, quantity: 2 }], coupon: 'AMOPETS10', discountRate: 0.10 };
+    const cart = { items: [{ id: '1', name: 'Deepblue', price: 69.90, quantity: 2 }], coupon: 'AMOPETS10', discountRate: 0.10 };
     const totals = { subtotal: 139.80, discount: 13.98, shipping: 0, total: 125.82, itemCount: 2, freeShipping: true };
     const vm = createMiniCartViewModel(cart, totals);
     assert.equal(vm.isEmpty, false);
@@ -1046,7 +1046,7 @@ describe('AddressForm — isFormSubmittable', () => {
    ╚═══════════════════════════════════════════════════════════════╝ */
 
 describe('OrderSummary — createOrderSummary', () => {
-  const mockCart = { items: [{ id: '1', name: 'Ametista', price: 69.90, quantity: 2 }, { id: '2', name: 'Girassol', price: 59.90, quantity: 1 }], coupon: 'AMOPETS10', discountRate: 0.10 };
+  const mockCart = { items: [{ id: '1', name: 'Deepblue', price: 69.90, quantity: 2 }, { id: '2', name: 'Girassol', price: 59.90, quantity: 1 }], coupon: 'AMOPETS10', discountRate: 0.10 };
   const mockTotals = { subtotal: 199.70, discount: 19.97, shipping: 0, total: 179.73, itemCount: 3, freeShipping: true };
   const mockAddress = { cep: '01310100', street: 'Av. Paulista', number: '1000', complement: 'Apto 42', neighborhood: 'Bela Vista', city: 'São Paulo', state: 'SP' };
 

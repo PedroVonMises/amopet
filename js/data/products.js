@@ -16,19 +16,19 @@ export const COLOR_MAP = {
 };
 
 export const CATALOG = {
-  'coleira-ametista-brilhante': {
+  'coleira-deepblue': {
     id: 'col-001',
-    name: 'Coleira Ametista Brilhante',
+    name: 'Coleira Deepblue',
     price: 69.90,
     badge: 'NOVO',
     rating: 4.8,
     reviewCount: 127,
     category: 'coleiras',
-    description: 'A Coleira Ametista Brilhante é perfeita para pets que adoram passeios com estilo. Feita com nylon de alta resistência, detalhes em dourado e acabamento premium.',
+    description: 'A Coleira Deepblue é perfeita para pets que adoram passeios com estilo. Feita com nylon de alta resistência, detalhes em dourado e acabamento premium.',
     images: [
-      'images/collar-ametista.png',
+      'images/collar-deepblue.png',
       'images/collar-lavanda.png',
-      'images/collar-galaxy.png',
+      'images/collar-deepgreen.png',
       'images/collar-marshmallow.png',
     ],
     sizes: ['P', 'M'],
@@ -122,21 +122,21 @@ export const CATALOG = {
     ],
     variant: 'Tamanho PP • Creme',
   },
-  'coleira-galaxy-night': {
+  'coleira-deepgreen': {
     id: 'col-006',
-    name: 'Coleira Galaxy Night',
+    name: 'Coleira Deepgreen',
     price: 79.90,
     badge: 'PREMIUM',
     rating: 4.9,
     reviewCount: 165,
     category: 'coleiras',
-    images: ['images/collar-galaxy.png'],
+    images: ['images/collar-deepgreen.png'],
     sizes: ['M', 'G'],
     colors: ['azul', 'preto'],
     variants: [
-      { size: 'P', color: 'preto', stock: 8, sku: 'GAL-P-PRE' },
-      { size: 'M', color: 'preto', stock: 6, sku: 'GAL-M-PRE' },
-      { size: 'G', color: 'preto', stock: 3, sku: 'GAL-G-PRE' },
+      { size: 'P', color: 'preto', stock: 8, sku: 'DGR-P-PRE' },
+      { size: 'M', color: 'preto', stock: 6, sku: 'DGR-M-PRE' },
+      { size: 'G', color: 'preto', stock: 3, sku: 'DGR-G-PRE' },
     ],
     variant: 'Tamanho G • Preto',
   },

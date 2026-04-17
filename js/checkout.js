@@ -81,7 +81,7 @@ function loadCartFromStorage() {
   // Demo: pre-populate with 2 items
   _state.cart = {
     items: [
-      { id: 'col-001', name: 'Coleira Ametista Brilhante', price: 69.90, quantity: 1, image: 'images/collar-ametista.png', variant: 'Tamanho M • Roxo' },
+      { id: 'col-001', name: 'Coleira Deepblue', price: 69.90, quantity: 1, image: 'images/collar-deepblue.png', variant: 'Tamanho M • Roxo' },
       { id: 'col-002', name: 'Coleira Girassol Adventure', price: 59.90, quantity: 2, image: 'images/collar-girassol.png', variant: 'Tamanho G • Amarelo' },
     ],
     coupon: null,

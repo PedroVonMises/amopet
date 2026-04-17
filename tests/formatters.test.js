@@ -80,7 +80,7 @@ describe('formatPriceCompact', () => {
 // ═══════════════════════════════════════════
 describe('formatSlug', () => {
   it('should create slug from product name', () => {
-    assert.equal(formatSlug('Coleira Ametista Brilhante'), 'coleira-ametista-brilhante');
+    assert.equal(formatSlug('Coleira Deepblue'), 'coleira-deepblue');
   });
 
   it('should remove accents', () => {
@@ -92,7 +92,7 @@ describe('formatSlug', () => {
   });
 
   it('should collapse multiple spaces/hyphens', () => {
-    assert.equal(formatSlug('Coleira   --  Galaxy'), 'coleira-galaxy');
+    assert.equal(formatSlug('Coleira   --  Deepgreen'), 'coleira-deepgreen');
   });
 
   it('should trim whitespace', () => {

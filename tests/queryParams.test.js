@@ -36,8 +36,8 @@ describe('parseQueryParams', () => {
   });
 
   it('should decode URI components', () => {
-    const result = parseQueryParams('?q=coleira%20ametista&tag=%F0%9F%94%A5');
-    assert.equal(result.q, 'coleira ametista');
+    const result = parseQueryParams('?q=coleira%20deepblue&tag=%F0%9F%94%A5');
+    assert.equal(result.q, 'coleira deepblue');
     assert.equal(result.tag, '🔥');
   });
 
@@ -83,8 +83,8 @@ describe('buildQueryString', () => {
   });
 
   it('should encode special characters', () => {
-    const result = buildQueryString({ q: 'coleira ametista' });
-    assert.equal(result, 'q=coleira%20ametista');
+    const result = buildQueryString({ q: 'coleira deepblue' });
+    assert.equal(result, 'q=coleira%20deepblue');
   });
 
   it('should handle array values', () => {
@@ -116,12 +116,12 @@ describe('buildQueryString', () => {
 // ═══════════════════════════════════════════
 describe('parseProductFilters', () => {
   it('should parse full filter query', () => {
-    const result = parseProductFilters('?category=coleiras&size=M&sort=price-asc&page=2&q=ametista');
+    const result = parseProductFilters('?category=coleiras&size=M&sort=price-asc&page=2&q=deepblue');
     assert.equal(result.category, 'coleiras');
     assert.equal(result.size, 'M');
     assert.equal(result.sort, 'price-asc');
     assert.equal(result.page, 2);
-    assert.equal(result.search, 'ametista');
+    assert.equal(result.search, 'deepblue');
   });
 
   it('should default sort to "relevance"', () => {
@@ -151,13 +151,13 @@ describe('parseProductFilters', () => {
   });
 
   it('should handle "search" as alias for "q"', () => {
-    const result = parseProductFilters('?search=galaxy');
-    assert.equal(result.search, 'galaxy');
+    const result = parseProductFilters('?search=deepgreen');
+    assert.equal(result.search, 'deepgreen');
   });
 
   it('should prefer "q" over "search"', () => {
-    const result = parseProductFilters('?q=ametista&search=galaxy');
-    assert.equal(result.search, 'ametista');
+    const result = parseProductFilters('?q=deepblue&search=deepgreen');
+    assert.equal(result.search, 'deepblue');
   });
 
   it('should parse float prices', () => {

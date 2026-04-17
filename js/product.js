@@ -29,7 +29,7 @@ const $ = function (id) { return document.getElementById(id); };
    ═════════════════════════════════════════════ */
 function init() {
   const slug = getProductSlug();
-  product = CATALOG[slug] || CATALOG['coleira-ametista-brilhante'];
+  product = CATALOG[slug] || CATALOG['coleira-deepblue'];
 
   // Initialize component states
   galleryState = createGalleryState(product.images);
@@ -59,7 +59,7 @@ function init() {
 
 function getProductSlug() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('p') || 'coleira-ametista-brilhante';
+  return params.get('p') || 'coleira-deepblue';
 }
 
 /* ═════════════════════════════════════════════

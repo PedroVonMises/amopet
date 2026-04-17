@@ -17,7 +17,7 @@ const {
 } = require('../js/utils/cart');
 
 // ─── Test data ───
-const coleira1 = { id: 'col-001', name: 'Coleira Ametista', price: 69.90 };
+const coleira1 = { id: 'col-001', name: 'Coleira Deepblue', price: 69.90 };
 const coleira2 = { id: 'col-002', name: 'Coleira Girassol', price: 59.90 };
 const coleira3 = { id: 'col-003', name: 'Coleira Sunset LED', price: 89.90 };
 

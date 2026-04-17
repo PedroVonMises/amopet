@@ -3,8 +3,10 @@
  * Immutable state management for the shopping cart.
  */
 
+import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from '../data/coupons.js';
+
 // ─── Action Types ───
-var CartActions = {
+export const CartActions = {
   ADD_ITEM: 'ADD_ITEM',
   REMOVE_ITEM: 'REMOVE_ITEM',
   UPDATE_QUANTITY: 'UPDATE_QUANTITY',
@@ -17,7 +19,7 @@ var CartActions = {
  * Create an empty cart state
  * @returns {object}
  */
-function createEmptyCart() {
+export function createEmptyCart() {
   return {
     items: [],
     coupon: null,
@@ -31,23 +33,23 @@ function createEmptyCart() {
  * @param {object} action - { type, payload }
  * @returns {object} New cart state
  */
-function cartReducer(state, action) {
+export function cartReducer(state, action) {
   if (!state) state = createEmptyCart();
 
   switch (action.type) {
     case CartActions.ADD_ITEM: {
-      var product = action.payload;
+      const product = action.payload;
       if (!product || !product.id || typeof product.price !== 'number') {
         return state;
       }
-      var existingIndex = -1;
-      for (var i = 0; i < state.items.length; i++) {
+      let existingIndex = -1;
+      for (let i = 0; i < state.items.length; i++) {
         if (state.items[i].id === product.id) {
           existingIndex = i;
           break;
         }
       }
-      var newItems;
+      let newItems;
       if (existingIndex >= 0) {
         newItems = state.items.map(function (item, idx) {
           if (idx === existingIndex) {
@@ -57,14 +59,14 @@ function cartReducer(state, action) {
         });
       } else {
         newItems = state.items.concat([
-          { id: product.id, name: product.name, price: product.price, quantity: 1 },
+          { id: product.id, name: product.name, price: product.price, quantity: 1, image: product.image || null },
         ]);
       }
       return Object.assign({}, state, { items: newItems });
     }
 
     case CartActions.REMOVE_ITEM: {
-      var itemId = action.payload;
+      const itemId = action.payload;
       return Object.assign({}, state, {
         items: state.items.filter(function (item) {
           return item.id !== itemId;
@@ -73,8 +75,8 @@ function cartReducer(state, action) {
     }
 
     case CartActions.UPDATE_QUANTITY: {
-      var _id = action.payload.id;
-      var qty = action.payload.quantity;
+      const _id = action.payload.id;
+      const qty = action.payload.quantity;
       if (typeof qty !== 'number' || qty < 0) return state;
       if (qty === 0) {
         return Object.assign({}, state, {
@@ -94,7 +96,7 @@ function cartReducer(state, action) {
     }
 
     case CartActions.APPLY_COUPON: {
-      var coupon = action.payload;
+      const coupon = action.payload;
       if (!coupon || typeof coupon.code !== 'string' || typeof coupon.rate !== 'number') {
         return state;
       }
@@ -119,15 +121,12 @@ function cartReducer(state, action) {
 
 // ─── Price Calculation ───
 
-var FREE_SHIPPING_THRESHOLD = 150;
-var SHIPPING_COST = 14.90;
-
 /**
  * Calculate cart subtotal (before discounts)
  * @param {Array} items
  * @returns {number}
  */
-function calculateSubtotal(items) {
+export function calculateSubtotal(items) {
   if (!Array.isArray(items)) return 0;
   return items.reduce(function (sum, item) {
     return sum + item.price * item.quantity;
@@ -140,7 +139,7 @@ function calculateSubtotal(items) {
  * @param {number} discountRate - 0 to 1
  * @returns {number}
  */
-function calculateDiscount(subtotal, discountRate) {
+export function calculateDiscount(subtotal, discountRate) {
   if (typeof subtotal !== 'number' || typeof discountRate !== 'number') return 0;
   if (discountRate < 0 || discountRate > 1) return 0;
   return Math.round(subtotal * discountRate * 100) / 100;
@@ -151,7 +150,7 @@ function calculateDiscount(subtotal, discountRate) {
  * @param {number} subtotal - After discount
  * @returns {number}
  */
-function calculateShipping(subtotal) {
+export function calculateShipping(subtotal) {
   if (typeof subtotal !== 'number' || subtotal < 0) return SHIPPING_COST;
   return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
 }
@@ -161,17 +160,17 @@ function calculateShipping(subtotal) {
  * @param {object} cartState
  * @returns {object} { subtotal, discount, shipping, total, itemCount, freeShipping }
  */
-function calculateCartTotals(cartState) {
+export function calculateCartTotals(cartState) {
   if (!cartState || !Array.isArray(cartState.items)) {
     return { subtotal: 0, discount: 0, shipping: SHIPPING_COST, total: SHIPPING_COST, itemCount: 0, freeShipping: false };
   }
 
-  var subtotal = calculateSubtotal(cartState.items);
-  var discount = calculateDiscount(subtotal, cartState.discountRate || 0);
-  var afterDiscount = subtotal - discount;
-  var shipping = calculateShipping(afterDiscount);
-  var total = afterDiscount + shipping;
-  var itemCount = cartState.items.reduce(function (sum, item) {
+  const subtotal = calculateSubtotal(cartState.items);
+  const discount = calculateDiscount(subtotal, cartState.discountRate || 0);
+  const afterDiscount = subtotal - discount;
+  const shipping = calculateShipping(afterDiscount);
+  const total = afterDiscount + shipping;
+  const itemCount = cartState.items.reduce(function (sum, item) {
     return sum + item.quantity;
   }, 0);
 
@@ -185,16 +184,26 @@ function calculateCartTotals(cartState) {
   };
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    CartActions: CartActions,
-    createEmptyCart: createEmptyCart,
-    cartReducer: cartReducer,
-    calculateSubtotal: calculateSubtotal,
-    calculateDiscount: calculateDiscount,
-    calculateShipping: calculateShipping,
-    calculateCartTotals: calculateCartTotals,
-    FREE_SHIPPING_THRESHOLD: FREE_SHIPPING_THRESHOLD,
-    SHIPPING_COST: SHIPPING_COST,
-  };
+/**
+ * Load cart state from localStorage
+ * @returns {object} Cart state
+ */
+export function loadCart() {
+  try {
+    const saved = localStorage.getItem('amopets_cart');
+    if (saved) return JSON.parse(saved);
+  } catch (e) { /* ignore */ }
+  return createEmptyCart();
 }
+
+/**
+ * Save cart state to localStorage and dispatch event
+ * @param {object} state
+ */
+export function saveCart(state) {
+  localStorage.setItem('amopets_cart', JSON.stringify(state));
+  window.dispatchEvent(new StorageEvent('storage', { key: 'amopets_cart' }));
+}
+
+// Re-export constants for convenience
+export { FREE_SHIPPING_THRESHOLD, SHIPPING_COST };

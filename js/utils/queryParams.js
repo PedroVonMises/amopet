@@ -5,25 +5,24 @@
 
 /**
  * Parse a query string into an object
- * Handles: ?category=coleiras&size=M&sort=price-asc&page=2
  * @param {string} queryString - URL query string (with or without leading "?")
  * @returns {Object.<string, string|string[]>} Parsed key-value pairs
  */
-function parseQueryParams(queryString) {
+export function parseQueryParams(queryString) {
   if (typeof queryString !== 'string') return {};
 
-  var clean = queryString.charAt(0) === '?' ? queryString.slice(1) : queryString;
+  const clean = queryString.charAt(0) === '?' ? queryString.slice(1) : queryString;
   if (clean.length === 0) return {};
 
-  var result = {};
-  var pairs = clean.split('&');
+  const result = {};
+  const pairs = clean.split('&');
 
-  for (var i = 0; i < pairs.length; i++) {
-    var pair = pairs[i];
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i];
     if (pair.length === 0) continue;
 
-    var eqIndex = pair.indexOf('=');
-    var key, value;
+    const eqIndex = pair.indexOf('=');
+    let key, value;
 
     if (eqIndex === -1) {
       key = decodeURIComponent(pair);
@@ -55,20 +54,20 @@ function parseQueryParams(queryString) {
  * @param {Object.<string, string|number|string[]>} params
  * @returns {string} Query string without leading "?"
  */
-function buildQueryString(params) {
+export function buildQueryString(params) {
   if (!params || typeof params !== 'object') return '';
 
-  var parts = [];
-  var keys = Object.keys(params);
+  const parts = [];
+  const keys = Object.keys(params);
 
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
-    var value = params[key];
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const value = params[key];
 
     if (value === null || value === undefined) continue;
 
     if (Array.isArray(value)) {
-      for (var j = 0; j < value.length; j++) {
+      for (let j = 0; j < value.length; j++) {
         parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(String(value[j])));
       }
     } else {
@@ -82,10 +81,10 @@ function buildQueryString(params) {
 /**
  * Extract product filter params from a query string
  * @param {string} queryString
- * @returns {object} { category, size, color, priceMin, priceMax, sort, page, search }
+ * @returns {object}
  */
-function parseProductFilters(queryString) {
-  var params = parseQueryParams(queryString);
+export function parseProductFilters(queryString) {
+  const params = parseQueryParams(queryString);
 
   return {
     category: params.category || null,
@@ -105,12 +104,12 @@ function parseProductFilters(queryString) {
  * @param {Object.<string, string|null>} updates - New params (null = remove)
  * @returns {string} Updated query string
  */
-function mergeQueryParams(currentQuery, updates) {
-  var existing = parseQueryParams(currentQuery);
+export function mergeQueryParams(currentQuery, updates) {
+  const existing = parseQueryParams(currentQuery);
 
-  var keys = Object.keys(updates);
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
+  const keys = Object.keys(updates);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
     if (updates[key] === null || updates[key] === undefined) {
       delete existing[key];
     } else {
@@ -119,13 +118,4 @@ function mergeQueryParams(currentQuery, updates) {
   }
 
   return buildQueryString(existing);
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    parseQueryParams: parseQueryParams,
-    buildQueryString: buildQueryString,
-    parseProductFilters: parseProductFilters,
-    mergeQueryParams: mergeQueryParams,
-  };
 }

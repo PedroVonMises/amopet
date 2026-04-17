@@ -8,7 +8,7 @@
  * @param {number} value - The numeric value
  * @returns {string} Formatted currency string
  */
-function formatCurrency(value) {
+export function formatCurrency(value) {
   if (typeof value !== 'number' || isNaN(value)) {
     throw new TypeError('Value must be a valid number');
   }
@@ -24,7 +24,7 @@ function formatCurrency(value) {
  * @param {number} value
  * @returns {string}
  */
-function formatPriceCompact(value) {
+export function formatPriceCompact(value) {
   if (typeof value !== 'number' || isNaN(value)) {
     throw new TypeError('Value must be a valid number');
   }
@@ -45,7 +45,7 @@ function formatPriceCompact(value) {
  * @param {string} name
  * @returns {string}
  */
-function formatSlug(name) {
+export function formatSlug(name) {
   if (typeof name !== 'string') {
     throw new TypeError('Name must be a string');
   }
@@ -65,7 +65,7 @@ function formatSlug(name) {
  * @param {number} quantity
  * @returns {string}
  */
-function formatQuantity(quantity) {
+export function formatQuantity(quantity) {
   if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity < 0) {
     throw new TypeError('Quantity must be a non-negative integer');
   }
@@ -80,7 +80,7 @@ function formatQuantity(quantity) {
  * @param {string} phone
  * @returns {string}
  */
-function formatWhatsAppNumber(phone) {
+export function formatWhatsAppNumber(phone) {
   if (typeof phone !== 'string') {
     throw new TypeError('Phone must be a string');
   }
@@ -95,7 +95,7 @@ function formatWhatsAppNumber(phone) {
  * @param {number} rate - Discount rate between 0 and 1
  * @returns {string}
  */
-function formatDiscount(rate) {
+export function formatDiscount(rate) {
   if (typeof rate !== 'number' || rate < 0 || rate > 1) {
     throw new RangeError('Discount rate must be between 0 and 1');
   }
@@ -103,13 +103,28 @@ function formatDiscount(rate) {
   return pct + '% OFF';
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    formatCurrency,
-    formatPriceCompact,
-    formatSlug,
-    formatQuantity,
-    formatWhatsAppNumber,
-    formatDiscount,
+/**
+ * Round a number to 2 decimal places (R2 fix)
+ * @param {number} value
+ * @returns {number}
+ */
+export function roundTwo(value) {
+  return Math.round(value * 100) / 100;
+}
+
+/**
+ * Calculate installment options for a price
+ * @param {number} price
+ * @returns {{ count: number, value: number, hasFees: boolean } | null}
+ */
+export function calculateInstallments(price) {
+  if (price <= 0) return null;
+  if (price < 30) return null;
+  const maxInstallments = price < 100 ? 2 : price < 200 ? 3 : 6;
+  const installmentValue = Math.round((price / maxInstallments) * 100) / 100;
+  return {
+    count: maxInstallments,
+    value: installmentValue,
+    hasFees: false,
   };
 }

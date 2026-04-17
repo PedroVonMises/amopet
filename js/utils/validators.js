@@ -8,7 +8,7 @@
  * @param {string} email
  * @returns {{ valid: boolean, error: string | null }}
  */
-function validateEmail(email) {
+export function validateEmail(email) {
   if (typeof email !== 'string') {
     return { valid: false, error: 'E-mail deve ser uma string' };
   }
@@ -33,7 +33,7 @@ function validateEmail(email) {
  * @param {number} [maxStock=99] - Maximum stock available
  * @returns {{ valid: boolean, error: string | null }}
  */
-function validateQuantity(quantity, maxStock) {
+export function validateQuantity(quantity, maxStock) {
   if (maxStock === undefined) maxStock = 99;
   if (typeof quantity !== 'number' || !Number.isInteger(quantity)) {
     return { valid: false, error: 'Quantidade deve ser um número inteiro' };
@@ -52,7 +52,7 @@ function validateQuantity(quantity, maxStock) {
  * @param {string} code
  * @returns {{ valid: boolean, error: string | null }}
  */
-function validateCouponCode(code) {
+export function validateCouponCode(code) {
   if (typeof code !== 'string') {
     return { valid: false, error: 'Código deve ser uma string' };
   }
@@ -77,7 +77,7 @@ function validateCouponCode(code) {
  * @param {string} cep
  * @returns {{ valid: boolean, error: string | null }}
  */
-function validateCEP(cep) {
+export function validateCEP(cep) {
   if (typeof cep !== 'string') {
     return { valid: false, error: 'CEP deve ser uma string' };
   }
@@ -99,12 +99,12 @@ function validateCEP(cep) {
  * @param {string} size - One of: PP, P, M, G, GG
  * @returns {{ valid: boolean, error: string | null }}
  */
-function validateCollarSize(size) {
-  var validSizes = ['PP', 'P', 'M', 'G', 'GG'];
+export function validateCollarSize(size) {
+  const validSizes = ['PP', 'P', 'M', 'G', 'GG'];
   if (typeof size !== 'string') {
     return { valid: false, error: 'Tamanho deve ser uma string' };
   }
-  var upper = size.trim().toUpperCase();
+  const upper = size.trim().toUpperCase();
   if (upper.length === 0) {
     return { valid: false, error: 'Selecione um tamanho' };
   }
@@ -112,14 +112,4 @@ function validateCollarSize(size) {
     return { valid: false, error: 'Tamanho inválido. Válidos: ' + validSizes.join(', ') };
   }
   return { valid: true, error: null };
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    validateEmail,
-    validateQuantity,
-    validateCouponCode,
-    validateCEP,
-    validateCollarSize,
-  };
 }

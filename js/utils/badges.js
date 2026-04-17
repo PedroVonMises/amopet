@@ -5,18 +5,11 @@
 
 /**
  * Determine which badge (if any) a product should display.
- * Priority: PROMO > NOVO > POPULAR > ESGOTADO > null
- *
  * @param {object} product
- * @param {string} product.id
- * @param {Date|string} product.createdAt - Date the product was added
- * @param {number} product.salesCount - Total units sold
- * @param {number} [product.stock] - Current stock (0 = out of stock)
- * @param {object|null} [product.promo] - Active promotion { label, rate }
  * @param {Date|string} [now] - Current date (for testing)
  * @returns {{ type: string, label: string } | null}
  */
-function getProductBadge(product, now) {
+export function getProductBadge(product, now) {
   if (!product || typeof product !== 'object') return null;
 
   // 1. Out of stock — always takes priority visually as a warning
@@ -31,11 +24,11 @@ function getProductBadge(product, now) {
 
   // 3. "NOVO" — product created within the last 30 days
   if (product.createdAt) {
-    var currentDate = now ? new Date(now) : new Date();
-    var createdDate = new Date(product.createdAt);
+    const currentDate = now ? new Date(now) : new Date();
+    const createdDate = new Date(product.createdAt);
     if (!isNaN(createdDate.getTime())) {
-      var diffMs = currentDate.getTime() - createdDate.getTime();
-      var diffDays = diffMs / (1000 * 60 * 60 * 24);
+      const diffMs = currentDate.getTime() - createdDate.getTime();
+      const diffDays = diffMs / (1000 * 60 * 60 * 24);
       if (diffDays <= 30) {
         return { type: 'new', label: 'NOVO' };
       }
@@ -52,11 +45,11 @@ function getProductBadge(product, now) {
 
 /**
  * Get CSS class for a badge type
- * @param {string} type - Badge type from getProductBadge
- * @returns {string} CSS class name
+ * @param {string} type
+ * @returns {string}
  */
-function getBadgeClass(type) {
-  var classMap = {
+export function getBadgeClass(type) {
+  const classMap = {
     new: 'badge--new',
     popular: 'badge--popular',
     promo: 'badge--promo',
@@ -71,7 +64,7 @@ function getBadgeClass(type) {
  * @param {number} [threshold=100]
  * @returns {boolean}
  */
-function isBestSeller(salesCount, threshold) {
+export function isBestSeller(salesCount, threshold) {
   if (threshold === undefined) threshold = 100;
   return typeof salesCount === 'number' && salesCount >= threshold;
 }
@@ -82,16 +75,7 @@ function isBestSeller(salesCount, threshold) {
  * @param {number} [freeShippingMin=150]
  * @returns {boolean}
  */
-function showFreeShippingBadge(price, freeShippingMin) {
+export function showFreeShippingBadge(price, freeShippingMin) {
   if (freeShippingMin === undefined) freeShippingMin = 150;
   return typeof price === 'number' && price >= freeShippingMin;
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    getProductBadge: getProductBadge,
-    getBadgeClass: getBadgeClass,
-    isBestSeller: isBestSeller,
-    showFreeShippingBadge: showFreeShippingBadge,
-  };
 }

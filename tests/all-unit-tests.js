@@ -139,7 +139,7 @@ describe('formatSlug', () => {
     assert.equal(formatSlug(''), '');
   });
   it('should handle emojis by removing them', () => {
-    assert.equal(formatSlug('Night Glow 🌙'), 'night-glow');
+    assert.equal(formatSlug('Gradient 🌈'), 'gradient');
   });
   it('should throw TypeError for non-string', () => {
     assert.throws(() => formatSlug(123), TypeError);
@@ -396,7 +396,7 @@ describe('validateCollarSize', () => {
    ╚═══════════════════════════════════════════════════════════════╝ */
 
 const coleira1 = { id: 'col-001', name: 'Coleira Deepblue', price: 69.90 };
-const coleira2 = { id: 'col-002', name: 'Coleira Girassol', price: 59.90 };
+const coleira2 = { id: 'col-002', name: 'Coleira Deeppink', price: 59.90 };
 const coleira3 = { id: 'col-003', name: 'Coleira Sunset LED', price: 89.90 };
 
 describe('createEmptyCart', () => {

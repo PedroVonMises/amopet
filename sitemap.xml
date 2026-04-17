@@ -3,7 +3,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://amopets.com.br/</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -11,7 +11,7 @@
   <!-- Catalog -->
   <url>
     <loc>https://amopets.com.br/catalog.html</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -20,19 +20,25 @@
   <!-- Note: In a dynamic deployment, these would be generated per product slug -->
   <url>
     <loc>https://amopets.com.br/product.html?p=coleira-deepblue</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://amopets.com.br/product.html?p=coleira-girassol-adventure</loc>
-    <lastmod>2026-04-16</lastmod>
+    <loc>https://amopets.com.br/product.html?p=coleira-deeppink</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://amopets.com.br/product.html?p=coleira-deepgreen</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://amopets.com.br/product.html?p=coleira-lavanda-dreams</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

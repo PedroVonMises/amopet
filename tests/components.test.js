@@ -481,8 +481,8 @@ describe('SideFilter — clearAllFilters', () => {
 describe('SideFilter — applyFilters', () => {
   const products = [
     { id: '1', name: 'Coleira Deepblue', price: 69.90, category: 'coleiras', sizes: ['P', 'M', 'G'], colors: ['roxo'], petType: 'dog', salesCount: 100, createdAt: '2026-04-01' },
-    { id: '2', name: 'Coleira Girassol', price: 59.90, category: 'coleiras', sizes: ['M', 'G'], colors: ['amarelo'], petType: 'dog', salesCount: 50, createdAt: '2026-03-01' },
-    { id: '3', name: 'Coleira Deepgreen', price: 79.90, category: 'coleiras-led', sizes: ['P', 'M'], colors: ['roxo'], petType: 'cat', salesCount: 75, createdAt: '2026-04-10' },
+    { id: '2', name: 'Coleira Deeppink', price: 59.90, category: 'coleiras', sizes: ['M', 'G'], colors: ['rosa'], petType: 'dog', salesCount: 50, createdAt: '2026-03-01' },
+    { id: '3', name: 'Coleira Deepgreen', price: 79.90, category: 'coleiras', sizes: ['P', 'M'], colors: ['verde'], petType: 'cat', salesCount: 75, createdAt: '2026-04-10' },
     { id: '4', name: 'Coleira Sunset LED', price: 89.90, category: 'coleiras-led', sizes: ['G', 'GG'], colors: ['laranja'], petType: 'dog', salesCount: 30, createdAt: '2026-02-01' },
   ];
 
@@ -492,7 +492,7 @@ describe('SideFilter — applyFilters', () => {
   it('should filter by category', () => {
     let s = toggleCategory(createFilterState(), 'coleiras-led');
     const result = applyFilters(products, s);
-    assert.equal(result.length, 2);
+    assert.equal(result.length, 1);
     assert.ok(result.every(p => p.category === 'coleiras-led'));
   });
   it('should filter by size', () => {
@@ -504,7 +504,7 @@ describe('SideFilter — applyFilters', () => {
   it('should filter by color', () => {
     let s = toggleColor(createFilterState(), 'roxo');
     const result = applyFilters(products, s);
-    assert.equal(result.length, 2);
+    assert.equal(result.length, 1);
   });
   it('should filter by price range', () => {
     let s = setPriceRange(createFilterState(), 70, 100);
@@ -1046,7 +1046,7 @@ describe('AddressForm — isFormSubmittable', () => {
    ╚═══════════════════════════════════════════════════════════════╝ */
 
 describe('OrderSummary — createOrderSummary', () => {
-  const mockCart = { items: [{ id: '1', name: 'Deepblue', price: 69.90, quantity: 2 }, { id: '2', name: 'Girassol', price: 59.90, quantity: 1 }], coupon: 'AMOPETS10', discountRate: 0.10 };
+const mockCart = { items: [{ id: '1', name: 'Deepblue', price: 69.90, quantity: 2 }, { id: '2', name: 'Deeppink', price: 59.90, quantity: 1 }], coupon: 'AMOPETS10', discountRate: 0.10 };
   const mockTotals = { subtotal: 199.70, discount: 19.97, shipping: 0, total: 179.73, itemCount: 3, freeShipping: true };
   const mockAddress = { cep: '01310100', street: 'Av. Paulista', number: '1000', complement: 'Apto 42', neighborhood: 'Bela Vista', city: 'São Paulo', state: 'SP' };
 

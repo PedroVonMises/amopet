@@ -7,7 +7,7 @@
  */
 
 // ─── Shared Imports (R1-R9 refactored) ───
-import { CATALOG, COLOR_MAP } from './data/products.js';
+import { CATALOG, COLOR_MAP, resolveProductSlug } from './data/products.js';
 import { formatCurrency, roundTwo, calculateInstallments } from './utils/formatters.js';
 import { cartReducer, CartActions, loadCart, saveCart } from './utils/cart.js';
 import { announce, syncCartBadge, showToast } from './utils/dom.js';
@@ -20,6 +20,7 @@ let product = null;
 let galleryState = null;
 let variantState = null;
 let stepperState = null;
+let currentProductSlug = 'coleira-deepblue';
 
 /* ─── DOM References ─── */
 const $ = function (id) { return document.getElementById(id); };
@@ -28,8 +29,10 @@ const $ = function (id) { return document.getElementById(id); };
    INITIALIZATION
    ═════════════════════════════════════════════ */
 function init() {
-  const slug = getProductSlug();
-  product = CATALOG[slug] || CATALOG['coleira-deepblue'];
+  const requestedSlug = getRequestedProductSlug();
+  currentProductSlug = resolveProductSlug(requestedSlug) || 'coleira-deepblue';
+  product = CATALOG[currentProductSlug] || CATALOG['coleira-deepblue'];
+  syncCanonicalProductUrl(requestedSlug, currentProductSlug);
 
   // Initialize component states
   galleryState = createGalleryState(product.images);
@@ -57,18 +60,92 @@ function init() {
   announce('Página do produto carregada: ' + product.name, 'live-announcements');
 }
 
-function getProductSlug() {
+function getRequestedProductSlug() {
   const params = new URLSearchParams(window.location.search);
   return params.get('p') || 'coleira-deepblue';
+}
+
+function getProductSlug() {
+  return currentProductSlug;
+}
+
+function syncCanonicalProductUrl(requestedSlug, canonicalSlug) {
+  if (!requestedSlug || requestedSlug === canonicalSlug) {
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  params.set('p', canonicalSlug);
+  const nextUrl = window.location.pathname + '?' + params.toString();
+  window.history.replaceState({}, '', nextUrl);
 }
 
 /* ═════════════════════════════════════════════
    PAGE META
    ═════════════════════════════════════════════ */
 function renderPageMeta() {
+  const productUrl = buildAbsoluteUrl('product.html?p=' + currentProductSlug);
+  const productImage = buildAbsoluteUrl(product.images[0] || 'images/collar-deepblue.png');
+  const productDescription = buildProductMetaDescription();
+  const schema = $('product-schema');
+
   document.title = product.name + ' | AMOPETS';
   $('breadcrumb-product').textContent = product.name;
   $('product-name').textContent = product.name;
+
+  setNodeAttribute(document.querySelector('meta[name="description"]'), 'content', productDescription);
+  setNodeAttribute(document.querySelector('meta[property="og:title"]'), 'content', product.name + ' | AMOPETS');
+  setNodeAttribute(document.querySelector('meta[property="og:description"]'), 'content', productDescription);
+  setNodeAttribute(document.querySelector('meta[property="og:image"]'), 'content', productImage);
+  setNodeAttribute(document.querySelector('meta[property="og:url"]'), 'content', productUrl);
+  setNodeAttribute(document.querySelector('meta[name="twitter:title"]'), 'content', product.name + ' | AMOPETS');
+  setNodeAttribute(document.querySelector('meta[name="twitter:description"]'), 'content', productDescription);
+  setNodeAttribute(document.querySelector('meta[name="twitter:image"]'), 'content', productImage);
+  setNodeAttribute($('product-image-preload'), 'href', product.images[0] || 'images/collar-deepblue.png');
+  setNodeAttribute($('product-canonical'), 'href', productUrl);
+
+  if (schema) {
+    schema.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      description: productDescription,
+      image: productImage,
+      brand: { '@type': 'Brand', name: 'AMOPETS' },
+      offers: {
+        '@type': 'Offer',
+        price: String(product.price.toFixed(2)),
+        priceCurrency: 'BRL',
+        availability: 'https://schema.org/InStock',
+        seller: { '@type': 'Organization', name: 'AMOPETS' },
+        url: productUrl,
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: String(product.rating || 0),
+        reviewCount: String(product.reviewCount || 0),
+      },
+    }, null, 2);
+  }
+}
+
+function buildAbsoluteUrl(path) {
+  return new URL(path, window.location.origin + '/').toString();
+}
+
+function buildProductMetaDescription() {
+  const collectionSuffix = product.collection ? ' da colecao ' + product.collection : '';
+  const sizeList = Array.isArray(product.sizes) && product.sizes.length > 0
+    ? ' Tamanhos ' + product.sizes[0] + ' ao ' + product.sizes[product.sizes.length - 1] + '.'
+    : '';
+  return product.name + collectionSuffix + ' para caes e gatos.' + sizeList + ' Frete gratis acima de R$150.';
+}
+
+function setNodeAttribute(node, attribute, value) {
+  if (!node || value === undefined || value === null) {
+    return;
+  }
+  node.setAttribute(attribute, value);
 }
 
 /* ═════════════════════════════════════════════
@@ -164,6 +241,10 @@ function renderProductInfo() {
     $('badge-novo').style.display = '';
   } else {
     $('badge-novo').style.display = 'none';
+  }
+
+  if ($('product-description')) {
+    $('product-description').textContent = product.description || '';
   }
 }
 
@@ -399,7 +480,11 @@ function bindAccordionEvents() {
    RELATED PRODUCTS
    ═════════════════════════════════════════════ */
 function renderRelatedProducts() {
-  const slugs = Object.keys(CATALOG);
+  const slugs = Object.keys(CATALOG).sort(function (left, right) {
+    const leftOrder = CATALOG[left] && typeof CATALOG[left].sortOrder === 'number' ? CATALOG[left].sortOrder : 999;
+    const rightOrder = CATALOG[right] && typeof CATALOG[right].sortOrder === 'number' ? CATALOG[right].sortOrder : 999;
+    return leftOrder - rightOrder;
+  });
   const currentSlug = getProductSlug();
   const related = slugs.filter(function (s) { return s !== currentSlug; }).slice(0, 4);
 

@@ -81,8 +81,8 @@ function loadCartFromStorage() {
   // Demo: pre-populate with 2 items
   _state.cart = {
     items: [
-      { id: 'col-001', name: 'Coleira Deepblue', price: 69.90, quantity: 1, image: 'images/collar-deepblue.png', variant: 'Tamanho M • Roxo' },
-      { id: 'col-002', name: 'Coleira Girassol Adventure', price: 59.90, quantity: 2, image: 'images/collar-girassol.png', variant: 'Tamanho G • Amarelo' },
+      { id: CATALOG['coleira-deepblue'].id, name: CATALOG['coleira-deepblue'].name, price: CATALOG['coleira-deepblue'].price, quantity: 1, image: CATALOG['coleira-deepblue'].images[0], variant: 'Tamanho M • Azul' },
+      { id: CATALOG['coleira-deeppink'].id, name: CATALOG['coleira-deeppink'].name, price: CATALOG['coleira-deeppink'].price, quantity: 2, image: CATALOG['coleira-deeppink'].images[0], variant: 'Tamanho M • Rosa' },
     ],
     coupon: null,
     discountRate: 0,

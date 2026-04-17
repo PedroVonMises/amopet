@@ -104,7 +104,7 @@ describe('formatSlug', () => {
   });
 
   it('should handle emojis by removing them', () => {
-    assert.equal(formatSlug('Night Glow 🌙'), 'night-glow');
+    assert.equal(formatSlug('Gradient 🌈'), 'gradient');
   });
 
   it('should throw TypeError for non-string', () => {

@@ -5,6 +5,10 @@
 
 import { formatSlug, calculateInstallments } from '../utils/formatters.js';
 
+export function _calculateInstallments(price) {
+  return calculateInstallments(price);
+}
+
 /**
  * Transform raw product data into the shape needed by the card UI
  * @param {object} product
@@ -33,7 +37,7 @@ export function createCardViewModel(product) {
     finalPrice: finalPrice,
     hasDiscount: hasPromo,
     savings: savings,
-    installments: calculateInstallments(finalPrice),
+    installments: _calculateInstallments(finalPrice),
     isAvailable: product.stock === undefined || product.stock > 0,
     rating: typeof product.rating === 'number' ? Math.min(5, Math.max(0, product.rating)) : null,
     reviewCount: typeof product.reviewCount === 'number' ? product.reviewCount : 0,

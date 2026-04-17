@@ -175,7 +175,8 @@ p {
 }
 
 /* ─── Screen reader only ─── */
-.sr-only {
+.sr-only,
+.live-region {
   position: absolute;
   width: 1px;
   height: 1px;

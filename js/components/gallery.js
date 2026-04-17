@@ -8,8 +8,8 @@
  * @param {string[]} images - Array of image URLs
  * @returns {object} Gallery state
  */
-function createGalleryState(images) {
-  var validImages = Array.isArray(images) ? images.filter(function (img) { return typeof img === 'string' && img.length > 0; }) : [];
+export function createGalleryState(images) {
+  const validImages = Array.isArray(images) ? images.filter(function (img) { return typeof img === 'string' && img.length > 0; }) : [];
   return {
     images: validImages,
     currentIndex: 0,
@@ -24,7 +24,7 @@ function createGalleryState(images) {
  * @param {object} state
  * @returns {object} New state
  */
-function goToNext(state) {
+export function goToNext(state) {
   if (!state || state.images.length <= 1) return state;
   return Object.assign({}, state, {
     currentIndex: (state.currentIndex + 1) % state.images.length,
@@ -37,9 +37,9 @@ function goToNext(state) {
  * @param {object} state
  * @returns {object} New state
  */
-function goToPrev(state) {
+export function goToPrev(state) {
   if (!state || state.images.length <= 1) return state;
-  var newIndex = state.currentIndex === 0 ? state.images.length - 1 : state.currentIndex - 1;
+  const newIndex = state.currentIndex === 0 ? state.images.length - 1 : state.currentIndex - 1;
   return Object.assign({}, state, {
     currentIndex: newIndex,
     isZoomed: false,
@@ -52,7 +52,7 @@ function goToPrev(state) {
  * @param {number} index
  * @returns {object} New state
  */
-function goToIndex(state, index) {
+export function goToIndex(state, index) {
   if (!state || typeof index !== 'number') return state;
   if (index < 0 || index >= state.images.length) return state;
   return Object.assign({}, state, {
@@ -66,7 +66,7 @@ function goToIndex(state, index) {
  * @param {object} state
  * @returns {object} New state
  */
-function toggleZoom(state) {
+export function toggleZoom(state) {
   if (!state || state.images.length === 0) return state;
   return Object.assign({}, state, {
     isZoomed: !state.isZoomed,
@@ -75,13 +75,13 @@ function toggleZoom(state) {
 }
 
 /**
- * Update zoom position (mouse coordinates within image container)
+ * Update zoom position
  * @param {object} state
- * @param {number} x - 0 to 1 (left to right)
- * @param {number} y - 0 to 1 (top to bottom)
+ * @param {number} x - 0 to 1
+ * @param {number} y - 0 to 1
  * @returns {object} New state
  */
-function updateZoomPosition(state, x, y) {
+export function updateZoomPosition(state, x, y) {
   if (!state || !state.isZoomed) return state;
   return Object.assign({}, state, {
     zoomPosition: {
@@ -96,17 +96,17 @@ function updateZoomPosition(state, x, y) {
  * @param {object} state
  * @returns {string | null}
  */
-function getCurrentImage(state) {
+export function getCurrentImage(state) {
   if (!state || state.images.length === 0) return null;
   return state.images[state.currentIndex] || null;
 }
 
 /**
- * Get gallery navigation info — is there prev/next?
+ * Get gallery navigation info
  * @param {object} state
  * @returns {{ hasPrev: boolean, hasNext: boolean, total: number, current: number }}
  */
-function getNavigationInfo(state) {
+export function getNavigationInfo(state) {
   if (!state || state.images.length === 0) {
     return { hasPrev: false, hasNext: false, total: 0, current: 0 };
   }
@@ -114,19 +114,6 @@ function getNavigationInfo(state) {
     hasPrev: state.images.length > 1,
     hasNext: state.images.length > 1,
     total: state.images.length,
-    current: state.currentIndex + 1, // 1-indexed for display
-  };
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    createGalleryState: createGalleryState,
-    goToNext: goToNext,
-    goToPrev: goToPrev,
-    goToIndex: goToIndex,
-    toggleZoom: toggleZoom,
-    updateZoomPosition: updateZoomPosition,
-    getCurrentImage: getCurrentImage,
-    getNavigationInfo: getNavigationInfo,
+    current: state.currentIndex + 1,
   };
 }

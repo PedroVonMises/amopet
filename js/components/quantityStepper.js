@@ -8,13 +8,13 @@
  * @param {number} [initial=1]
  * @param {number} [min=1]
  * @param {number} [max=99]
- * @returns {object} Stepper state
+ * @returns {object}
  */
-function createStepperState(initial, min, max) {
-  var _min = (typeof min === 'number' && min >= 0) ? min : 1;
-  var _max = (typeof max === 'number' && max > 0) ? max : 99;
+export function createStepperState(initial, min, max) {
+  const _min = (typeof min === 'number' && min >= 0) ? min : 1;
+  let _max = (typeof max === 'number' && max > 0) ? max : 99;
   if (_min > _max) _max = _min;
-  var _val = (typeof initial === 'number') ? initial : _min;
+  let _val = (typeof initial === 'number') ? initial : _min;
   _val = Math.max(_min, Math.min(_max, _val));
 
   return {
@@ -28,12 +28,12 @@ function createStepperState(initial, min, max) {
  * Increment the value by step
  * @param {object} state
  * @param {number} [step=1]
- * @returns {object} New state
+ * @returns {object}
  */
-function increment(state, step) {
+export function increment(state, step) {
   if (!state) return state;
-  var s = (typeof step === 'number' && step > 0) ? step : 1;
-  var newVal = Math.min(state.max, state.value + s);
+  const s = (typeof step === 'number' && step > 0) ? step : 1;
+  const newVal = Math.min(state.max, state.value + s);
   return Object.assign({}, state, { value: newVal });
 }
 
@@ -41,12 +41,12 @@ function increment(state, step) {
  * Decrement the value by step
  * @param {object} state
  * @param {number} [step=1]
- * @returns {object} New state
+ * @returns {object}
  */
-function decrement(state, step) {
+export function decrement(state, step) {
   if (!state) return state;
-  var s = (typeof step === 'number' && step > 0) ? step : 1;
-  var newVal = Math.max(state.min, state.value - s);
+  const s = (typeof step === 'number' && step > 0) ? step : 1;
+  const newVal = Math.max(state.min, state.value - s);
   return Object.assign({}, state, { value: newVal });
 }
 
@@ -54,12 +54,12 @@ function decrement(state, step) {
  * Set value directly (clamped to bounds)
  * @param {object} state
  * @param {number} value
- * @returns {object} New state
+ * @returns {object}
  */
-function setValue(state, value) {
+export function setValue(state, value) {
   if (!state) return state;
   if (typeof value !== 'number' || isNaN(value)) return state;
-  var clamped = Math.max(state.min, Math.min(state.max, Math.round(value)));
+  const clamped = Math.max(state.min, Math.min(state.max, Math.round(value)));
   return Object.assign({}, state, { value: clamped });
 }
 
@@ -68,7 +68,7 @@ function setValue(state, value) {
  * @param {object} state
  * @returns {boolean}
  */
-function canIncrement(state) {
+export function canIncrement(state) {
   if (!state) return false;
   return state.value < state.max;
 }
@@ -78,7 +78,7 @@ function canIncrement(state) {
  * @param {object} state
  * @returns {boolean}
  */
-function canDecrement(state) {
+export function canDecrement(state) {
   if (!state) return false;
   return state.value > state.min;
 }
@@ -88,19 +88,7 @@ function canDecrement(state) {
  * @param {object} state
  * @returns {string}
  */
-function getStepperAriaLabel(state) {
+export function getStepperAriaLabel(state) {
   if (!state) return 'Quantidade';
   return 'Quantidade: ' + state.value + ' (mínimo ' + state.min + ', máximo ' + state.max + ')';
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    createStepperState: createStepperState,
-    increment: increment,
-    decrement: decrement,
-    setValue: setValue,
-    canIncrement: canIncrement,
-    canDecrement: canDecrement,
-    getStepperAriaLabel: getStepperAriaLabel,
-  };
 }

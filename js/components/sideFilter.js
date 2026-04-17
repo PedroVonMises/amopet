@@ -3,15 +3,15 @@
  * Filter state management, active filters, price range.
  */
 
-var VALID_SORT_OPTIONS = ['relevance', 'price-asc', 'price-desc', 'newest', 'popular'];
-var VALID_SIZES = ['PP', 'P', 'M', 'G', 'GG'];
-var VALID_CATEGORIES = ['coleiras', 'coleiras-led', 'coleiras-couro', 'coleiras-nylon'];
+export const VALID_SORT_OPTIONS = ['relevance', 'price-asc', 'price-desc', 'newest', 'popular'];
+export const VALID_SIZES = ['PP', 'P', 'M', 'G', 'GG'];
+export const VALID_CATEGORIES = ['coleiras', 'coleiras-led', 'coleiras-couro', 'coleiras-nylon'];
 
 /**
  * Create initial filter state
- * @returns {object} Filter state
+ * @returns {object}
  */
-function createFilterState() {
+export function createFilterState() {
   return {
     categories: [],
     sizes: [],
@@ -19,7 +19,7 @@ function createFilterState() {
     priceRange: { min: null, max: null },
     sort: 'relevance',
     search: '',
-    petType: null, // 'dog' | 'cat' | null
+    petType: null,
   };
 }
 
@@ -29,11 +29,11 @@ function createFilterState() {
  * @param {string} category
  * @returns {object}
  */
-function toggleCategory(state, category) {
+export function toggleCategory(state, category) {
   if (!state || typeof category !== 'string') return state;
-  var cat = category.toLowerCase().trim();
-  var idx = state.categories.indexOf(cat);
-  var newCats = idx >= 0
+  const cat = category.toLowerCase().trim();
+  const idx = state.categories.indexOf(cat);
+  const newCats = idx >= 0
     ? state.categories.filter(function (c) { return c !== cat; })
     : state.categories.concat([cat]);
   return Object.assign({}, state, { categories: newCats });
@@ -45,12 +45,12 @@ function toggleCategory(state, category) {
  * @param {string} size
  * @returns {object}
  */
-function toggleSize(state, size) {
+export function toggleSize(state, size) {
   if (!state || typeof size !== 'string') return state;
-  var s = size.toUpperCase().trim();
+  const s = size.toUpperCase().trim();
   if (VALID_SIZES.indexOf(s) === -1) return state;
-  var idx = state.sizes.indexOf(s);
-  var newSizes = idx >= 0
+  const idx = state.sizes.indexOf(s);
+  const newSizes = idx >= 0
     ? state.sizes.filter(function (x) { return x !== s; })
     : state.sizes.concat([s]);
   return Object.assign({}, state, { sizes: newSizes });
@@ -62,12 +62,12 @@ function toggleSize(state, size) {
  * @param {string} color
  * @returns {object}
  */
-function toggleColor(state, color) {
+export function toggleColor(state, color) {
   if (!state || typeof color !== 'string') return state;
-  var c = color.toLowerCase().trim();
+  const c = color.toLowerCase().trim();
   if (c.length === 0) return state;
-  var idx = state.colors.indexOf(c);
-  var newColors = idx >= 0
+  const idx = state.colors.indexOf(c);
+  const newColors = idx >= 0
     ? state.colors.filter(function (x) { return x !== c; })
     : state.colors.concat([c]);
   return Object.assign({}, state, { colors: newColors });
@@ -80,12 +80,12 @@ function toggleColor(state, color) {
  * @param {number|null} max
  * @returns {object}
  */
-function setPriceRange(state, min, max) {
+export function setPriceRange(state, min, max) {
   if (!state) return state;
-  var cleanMin = (typeof min === 'number' && min >= 0) ? min : null;
-  var cleanMax = (typeof max === 'number' && max > 0) ? max : null;
+  const cleanMin = (typeof min === 'number' && min >= 0) ? min : null;
+  const cleanMax = (typeof max === 'number' && max > 0) ? max : null;
   if (cleanMin !== null && cleanMax !== null && cleanMin > cleanMax) {
-    return state; // Invalid range
+    return state;
   }
   return Object.assign({}, state, {
     priceRange: { min: cleanMin, max: cleanMax },
@@ -98,7 +98,7 @@ function setPriceRange(state, min, max) {
  * @param {string} sortBy
  * @returns {object}
  */
-function setSort(state, sortBy) {
+export function setSort(state, sortBy) {
   if (!state || VALID_SORT_OPTIONS.indexOf(sortBy) === -1) return state;
   return Object.assign({}, state, { sort: sortBy });
 }
@@ -109,7 +109,7 @@ function setSort(state, sortBy) {
  * @param {string} term
  * @returns {object}
  */
-function setSearch(state, term) {
+export function setSearch(state, term) {
   if (!state) return state;
   return Object.assign({}, state, { search: typeof term === 'string' ? term.trim() : '' });
 }
@@ -117,21 +117,21 @@ function setSearch(state, term) {
 /**
  * Set pet type filter
  * @param {object} state
- * @param {string|null} petType - 'dog', 'cat', or null
+ * @param {string|null} petType
  * @returns {object}
  */
-function setPetType(state, petType) {
+export function setPetType(state, petType) {
   if (!state) return state;
-  var valid = [null, 'dog', 'cat'];
+  const valid = [null, 'dog', 'cat'];
   if (valid.indexOf(petType) === -1) return state;
   return Object.assign({}, state, { petType: petType });
 }
 
 /**
- * Clear all filters (reset to initial state)
+ * Clear all filters
  * @returns {object}
  */
-function clearAllFilters() {
+export function clearAllFilters() {
   return createFilterState();
 }
 
@@ -140,16 +140,15 @@ function clearAllFilters() {
  * @param {object} state
  * @returns {number}
  */
-function getActiveFilterCount(state) {
+export function getActiveFilterCount(state) {
   if (!state) return 0;
-  var count = 0;
+  let count = 0;
   count += state.categories.length;
   count += state.sizes.length;
   count += state.colors.length;
   if (state.priceRange.min !== null || state.priceRange.max !== null) count++;
   if (state.search && state.search.length > 0) count++;
   if (state.petType !== null) count++;
-  // sort is not counted as a "filter"
   return count;
 }
 
@@ -158,7 +157,7 @@ function getActiveFilterCount(state) {
  * @param {object} state
  * @returns {boolean}
  */
-function hasActiveFilters(state) {
+export function hasActiveFilters(state) {
   return getActiveFilterCount(state) > 0;
 }
 
@@ -166,42 +165,35 @@ function hasActiveFilters(state) {
  * Apply filters to a product list
  * @param {object[]} products
  * @param {object} filterState
- * @returns {object[]} Filtered products
+ * @returns {object[]}
  */
-function applyFilters(products, filterState) {
+export function applyFilters(products, filterState) {
   if (!Array.isArray(products) || !filterState) return [];
 
-  var results = products.filter(function (p) {
-    // Category filter
+  let results = products.filter(function (p) {
     if (filterState.categories.length > 0 && filterState.categories.indexOf(p.category) === -1) return false;
-    // Size filter
     if (filterState.sizes.length > 0) {
-      var productSizes = Array.isArray(p.sizes) ? p.sizes : [];
-      var hasMatchingSize = filterState.sizes.some(function (s) { return productSizes.indexOf(s) >= 0; });
+      const productSizes = Array.isArray(p.sizes) ? p.sizes : [];
+      const hasMatchingSize = filterState.sizes.some(function (s) { return productSizes.indexOf(s) >= 0; });
       if (!hasMatchingSize) return false;
     }
-    // Color filter
     if (filterState.colors.length > 0) {
-      var productColors = Array.isArray(p.colors) ? p.colors : [];
-      var hasMatchingColor = filterState.colors.some(function (c) { return productColors.indexOf(c) >= 0; });
+      const productColors = Array.isArray(p.colors) ? p.colors : [];
+      const hasMatchingColor = filterState.colors.some(function (c) { return productColors.indexOf(c) >= 0; });
       if (!hasMatchingColor) return false;
     }
-    // Price range
     if (filterState.priceRange.min !== null && p.price < filterState.priceRange.min) return false;
     if (filterState.priceRange.max !== null && p.price > filterState.priceRange.max) return false;
-    // Pet type
     if (filterState.petType !== null && p.petType !== filterState.petType) return false;
-    // Search
     if (filterState.search && filterState.search.length > 0) {
-      var term = filterState.search.toLowerCase();
-      var nameMatch = p.name && p.name.toLowerCase().indexOf(term) >= 0;
-      var descMatch = p.description && p.description.toLowerCase().indexOf(term) >= 0;
+      const term = filterState.search.toLowerCase();
+      const nameMatch = p.name && p.name.toLowerCase().indexOf(term) >= 0;
+      const descMatch = p.description && p.description.toLowerCase().indexOf(term) >= 0;
       if (!nameMatch && !descMatch) return false;
     }
     return true;
   });
 
-  // Sort
   if (filterState.sort === 'price-asc') {
     results.sort(function (a, b) { return a.price - b.price; });
   } else if (filterState.sort === 'price-desc') {
@@ -213,23 +205,4 @@ function applyFilters(products, filterState) {
   }
 
   return results;
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    createFilterState: createFilterState,
-    toggleCategory: toggleCategory,
-    toggleSize: toggleSize,
-    toggleColor: toggleColor,
-    setPriceRange: setPriceRange,
-    setSort: setSort,
-    setSearch: setSearch,
-    setPetType: setPetType,
-    clearAllFilters: clearAllFilters,
-    getActiveFilterCount: getActiveFilterCount,
-    hasActiveFilters: hasActiveFilters,
-    applyFilters: applyFilters,
-    VALID_SORT_OPTIONS: VALID_SORT_OPTIONS,
-    VALID_SIZES: VALID_SIZES,
-  };
 }

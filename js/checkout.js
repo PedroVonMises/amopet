@@ -211,6 +211,29 @@ function _calculateSubtotal() {
   return roundTwo(sum);
 }
 
+/* ═══════════════════════════════════════════════
+   ORDER SUMMARY CALCULATION
+   ═══════════════════════════════════════════════ */
+function calculateOrderSummary() {
+  const subtotal = _calculateSubtotal();
+  const discount = roundTwo(subtotal * _state.cart.discountRate);
+  const afterDiscount = roundTwo(subtotal - discount);
+  const shipping = afterDiscount >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const pixDiscount = _state.paymentMethod === 'pix' ? roundTwo((afterDiscount + shipping) * 0.05) : 0;
+  const total = roundTwo(afterDiscount + shipping - pixDiscount);
+  const totalSavings = roundTwo(discount + (afterDiscount >= FREE_SHIPPING_THRESHOLD ? SHIPPING_COST : 0) + pixDiscount);
+
+  return {
+    subtotal,
+    discount,
+    afterDiscount,
+    shipping,
+    pixDiscount,
+    total,
+    totalSavings
+  };
+}
+
 /* ═════════════════════════════════════════════
    STEP NAVIGATION
    ═════════════════════════════════════════════ */
@@ -281,11 +304,17 @@ function handleCtaClick() {
     if (_state.cart.items.length === 0) return;
     _state.maxCompletedStep = Math.max(_state.maxCompletedStep, 1);
     goToStep(2);
-  } else if (_state.currentStep === 2) {
+    return;
+  }
+
+  if (_state.currentStep === 2) {
     if (!validateAddress()) return;
     _state.maxCompletedStep = Math.max(_state.maxCompletedStep, 2);
     goToStep(3);
-  } else if (_state.currentStep === 3) {
+    return;
+  }
+
+  if (_state.currentStep === 3) {
     if (!_state.paymentMethod) {
       announce('Por favor, selecione uma forma de pagamento.', 'live-announcements');
       return;
@@ -428,13 +457,7 @@ function selectPaymentMethod(method) {
    ═════════════════════════════════════════════ */
 function completeOrder() {
   const orderId = 'AMOPETS-' + String(Math.floor(Math.random() * 9000) + 1000);
-
-  const subtotal = _calculateSubtotal();
-  const discount = roundTwo(subtotal * _state.cart.discountRate);
-  const afterDiscount = roundTwo(subtotal - discount);
-  const shipping = afterDiscount >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  const pixDiscount = _state.paymentMethod === 'pix' ? roundTwo((afterDiscount + shipping) * 0.05) : 0;
-  const total = roundTwo(afterDiscount + shipping - pixDiscount);
+  const summary = calculateOrderSummary();
 
   document.getElementById('order-id-display').textContent = 'Pedido #' + orderId;
 
@@ -442,14 +465,14 @@ function completeOrder() {
   _state.cart.items.forEach(function (item) {
     summaryHtml += '<div class="summary-line"><span>' + item.name + ' × ' + item.quantity + '</span><span>' + formatCurrency(roundTwo(item.price * item.quantity)) + '</span></div>';
   });
-  if (discount > 0) {
-    summaryHtml += '<div class="summary-line summary-line--discount"><span>Desconto (' + _state.cart.coupon + ')</span><span>-' + formatCurrency(discount) + '</span></div>';
+  if (summary.discount > 0) {
+    summaryHtml += '<div class="summary-line summary-line--discount"><span>Desconto (' + _state.cart.coupon + ')</span><span>-' + formatCurrency(summary.discount) + '</span></div>';
   }
-  summaryHtml += '<div class="summary-line"><span>Frete</span><span>' + (shipping === 0 ? 'Grátis' : formatCurrency(shipping)) + '</span></div>';
-  if (pixDiscount > 0) {
-    summaryHtml += '<div class="summary-line summary-line--discount"><span>Desconto Pix</span><span>-' + formatCurrency(pixDiscount) + '</span></div>';
+  summaryHtml += '<div class="summary-line"><span>Frete</span><span>' + (summary.shipping === 0 ? 'Grátis' : formatCurrency(summary.shipping)) + '</span></div>';
+  if (summary.pixDiscount > 0) {
+    summaryHtml += '<div class="summary-line summary-line--discount"><span>Desconto Pix</span><span>-' + formatCurrency(summary.pixDiscount) + '</span></div>';
   }
-  summaryHtml += '<div class="summary-line summary-line--total"><span>Total</span><span>' + formatCurrency(total) + '</span></div>';
+  summaryHtml += '<div class="summary-line summary-line--total"><span>Total</span><span>' + formatCurrency(summary.total) + '</span></div>';
 
   document.getElementById('success-summary-lines').innerHTML = summaryHtml;
 

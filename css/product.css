@@ -1,20 +1,22 @@
 /* ═══════════════════════════════════════════════════════
    AMOPETS — Product Detail Page Styles (product.css)
-   Gallery, variant selector, qty stepper, product info
+   📱 MOBILE-FIRST ARCHITECTURE
+   Base = Mobile → Tablet (640px) → Desktop (900px) → Wide (1024px)
    ═══════════════════════════════════════════════════════ */
 
-/* ─── PDP Layout ─── */
+/* ─── PDP Layout ───
+   Mobile: single column, natural flow
+   Desktop: 2-column with sticky gallery
+   ─── */
 .pdp {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-4xl);
-  align-items: start;
-  padding-block: var(--space-3xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  padding-block: var(--space-xl);
 }
 
 .pdp__gallery-col {
-  position: sticky;
-  top: calc(var(--header-height) + var(--space-xl));
+  position: relative;
 }
 
 .pdp__info-col {
@@ -56,7 +58,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   GALLERY 🖼
+   GALLERY 🖼 — Mobile base
    ═══════════════════════════════════════════════════════ */
 .gallery {
   position: relative;
@@ -80,7 +82,7 @@
   height: 100%;
   object-fit: contain;
   transition: transform var(--duration-normal) var(--ease-spring);
-  padding: var(--space-xl);
+  padding: var(--space-md);
 }
 
 .gallery__main--zoomed .gallery__main-img {
@@ -146,17 +148,24 @@
   backdrop-filter: blur(4px);
 }
 
-/* Thumbnails */
+/* Thumbnails — mobile: horizontal scroll */
 .gallery__thumbs {
   display: flex;
   gap: var(--space-sm);
   margin-top: var(--space-md);
   padding: var(--space-2xs);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.gallery__thumbs::-webkit-scrollbar {
+  display: none;
 }
 
 .gallery__thumb {
-  width: 72px;
-  height: 72px;
+  width: 60px;
+  height: 60px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   cursor: pointer;
@@ -183,7 +192,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   PRODUCT INFO
+   PRODUCT INFO — Mobile base
    ═══════════════════════════════════════════════════════ */
 .product-info__badge-row {
   display: flex;
@@ -193,7 +202,7 @@
 
 .product-info__name {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   font-weight: var(--fw-bold);
   color: var(--color-dark);
   line-height: var(--lh-tight);
@@ -241,7 +250,7 @@
 
 .price-block__current {
   font-family: var(--font-accent);
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: var(--fw-bold);
   color: var(--color-purple-primary);
   line-height: 1;
@@ -270,7 +279,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   VARIANT SELECTOR
+   VARIANT SELECTOR — Mobile base
    ═══════════════════════════════════════════════════════ */
 .variant-section {
   margin-bottom: var(--space-xl);
@@ -416,7 +425,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   QUANTITY STEPPER (PDP version)
+   QUANTITY STEPPER (PDP version) — Mobile base
    ═══════════════════════════════════════════════════════ */
 .pdp-stepper {
   display: flex;
@@ -483,12 +492,21 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   ADD TO CART CTA
+   ADD TO CART CTA — Mobile base (sticky bottom bar)
    ═══════════════════════════════════════════════════════ */
 .add-to-cart-row {
   display: flex;
   gap: var(--space-md);
   margin-bottom: var(--space-xl);
+  /* Mobile: sticky bottom for thumb-zone accessibility */
+  position: sticky;
+  bottom: 0;
+  background: var(--color-white);
+  margin-left: calc(-1 * var(--container-padding));
+  margin-right: calc(-1 * var(--container-padding));
+  padding: var(--space-md) var(--container-padding);
+  z-index: var(--z-sticky);
+  box-shadow: 0 -8px 24px rgba(45, 27, 54, 0.08);
 }
 
 .add-to-cart-btn {
@@ -638,10 +656,10 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   RELATED PRODUCTS
+   RELATED PRODUCTS — Mobile base (single column)
    ═══════════════════════════════════════════════════════ */
 .related-section {
-  padding-block: var(--space-4xl);
+  padding-block: var(--space-3xl);
 }
 
 .related-section__title {
@@ -655,8 +673,8 @@
 
 .related-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-lg);
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
 }
 
 .related-card {
@@ -720,12 +738,13 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   CART TOAST
+   CART TOAST — Mobile base (bottom bar)
    ═══════════════════════════════════════════════════════ */
 .cart-toast {
   position: fixed;
-  top: calc(var(--header-height) + var(--space-md));
-  right: var(--space-xl);
+  bottom: var(--space-xl);
+  left: var(--space-md);
+  right: var(--space-md);
   z-index: var(--z-overlay);
   padding: var(--space-md) var(--space-xl);
   background: var(--color-purple-primary);
@@ -738,12 +757,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  transform: translateX(120%);
+  transform: translateY(120%);
   transition: transform var(--duration-normal) var(--ease-spring);
 }
 
 .cart-toast--visible {
-  transform: translateX(0);
+  transform: translateY(0);
 }
 
 .cart-toast a {
@@ -752,16 +771,27 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   RESPONSIVE
+   📱→💻 PROGRESSIVE ENHANCEMENT BREAKPOINTS
+   Mobile-First: min-width queries only
    ═══════════════════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .pdp {
-    grid-template-columns: 1fr;
-    gap: var(--space-xl);
+
+/* ─── Tablet (≥640px) ─── */
+@media (min-width: 640px) {
+  .product-info__name {
+    font-size: var(--text-2xl);
   }
 
-  .pdp__gallery-col {
-    position: static;
+  .price-block__current {
+    font-size: var(--text-3xl);
+  }
+
+  .gallery__thumb {
+    width: 72px;
+    height: 72px;
+  }
+
+  .gallery__thumbs {
+    overflow-x: visible;
   }
 
   .gallery__main-img {
@@ -770,67 +800,59 @@
 
   .related-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .product-info__name {
-    font-size: var(--text-xl);
+    gap: var(--space-lg);
   }
 
-  .price-block__current {
-    font-size: var(--text-2xl);
+  .related-section {
+    padding-block: var(--space-4xl);
   }
 
-  .gallery__thumbs {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .gallery__thumbs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .gallery__thumb {
-    width: 60px;
-    height: 60px;
-  }
-
+  /* Remove sticky CTA on larger screens */
   .add-to-cart-row {
-    position: sticky;
-    bottom: 0;
-    background: var(--color-white);
-    margin: 0 calc(-1 * var(--container-padding));
-    padding: var(--space-md) var(--container-padding);
-    z-index: var(--z-sticky);
-    box-shadow: 0 -8px 24px rgba(45, 27, 54, 0.08);
-  }
-
-  .related-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-md);
-  }
-
-  .cart-toast {
-    right: var(--space-md);
-    left: var(--space-md);
-    top: auto;
-    bottom: var(--space-xl);
+    position: static;
+    background: transparent;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    box-shadow: none;
   }
 }
 
-@media (max-width: 480px) {
-  .related-grid {
-    grid-template-columns: 1fr;
+/* ─── Desktop (≥900px) ─── */
+@media (min-width: 900px) {
+  .pdp {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4xl);
+    padding-block: var(--space-3xl);
   }
 
-  .pdp {
-    padding-block: var(--space-xl);
+  .pdp__gallery-col {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-xl));
   }
 
   .gallery__main-img {
-    padding: var(--space-md);
+    padding: var(--space-xl);
+  }
+
+  /* Toast slides from right on desktop */
+  .cart-toast {
+    left: auto;
+    bottom: auto;
+    top: calc(var(--header-height) + var(--space-md));
+    right: var(--space-xl);
+    transform: translateX(120%);
+  }
+
+  .cart-toast--visible {
+    transform: translateX(0);
+  }
+}
+
+/* ─── Wide Desktop (≥1024px) ─── */
+@media (min-width: 1024px) {
+  .related-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 

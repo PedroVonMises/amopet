@@ -85,27 +85,43 @@
         <span class="header__logo-text">AM<span style="color: var(--color-yellow-primary);">O</span>PETS</span>
       </a>
 
-      <nav class="header__nav" id="main-nav" aria-label="Navegação principal">
-        <ul class="header__nav-list">
-          <li><a href="index.html" class="header__nav-link">Início</a></li>
-          <li><a href="index.html#products" class="header__nav-link">Coleiras</a></li>
-          <li><a href="index.html#collections" class="header__nav-link">Coleções</a></li>
-          <li><a href="index.html#about" class="header__nav-link">Sobre</a></li>
-        </ul>
+      <!-- Desktop Navigation (flat links, matching index.html) -->
+      <nav class="header__nav" id="desktop-nav" aria-label="Navegação principal">
+        <a href="index.html" class="header__nav-link">Início</a>
+        <a href="index.html#products" class="header__nav-link">Coleiras</a>
+        <a href="index.html#collections" class="header__nav-link">Coleções</a>
+        <a href="index.html#trust" class="header__nav-link">Sobre</a>
       </nav>
 
+      <!-- Header Actions -->
       <div class="header__actions">
-        <button class="header__cart-btn" id="cart-toggle" aria-label="Abrir carrinho">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Cart -->
+        <a href="checkout.html" class="header__icon-btn" id="btn-cart" aria-label="Carrinho de compras">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
             <line x1="3" y1="6" x2="21" y2="6"/>
             <path d="M16 10a4 4 0 01-8 0"/>
           </svg>
           <span class="cart-badge" id="cart-count" role="status" aria-live="polite" aria-label="0 itens no carrinho">0</span>
+        </a>
+        <!-- Hamburger (mobile) -->
+        <button class="header__hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+          <span class="header__hamburger-line"></span>
+          <span class="header__hamburger-line"></span>
+          <span class="header__hamburger-line"></span>
         </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu__backdrop" id="mobile-backdrop"></div>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Menu mobile">
+    <a href="index.html" class="mobile-menu__link">Início</a>
+    <a href="index.html#products" class="mobile-menu__link">Coleiras</a>
+    <a href="index.html#collections" class="mobile-menu__link">Coleções</a>
+    <a href="index.html#trust" class="mobile-menu__link">Sobre</a>
+  </nav>
 
   <!-- ═══════════════════════════════════════════
        MAIN PRODUCT AREA

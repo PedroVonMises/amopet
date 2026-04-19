@@ -44,6 +44,27 @@
   letter-spacing: -0.02em;
 }
 
+.header__logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.header__logo-text-img {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Footer adjustment */
+.footer .header__logo-img {
+  height: 36px;
+}
+
+.footer .header__logo-text-img {
+  height: 18px;
+}
+
 /* Navigation */
 .header__nav {
   display: flex;

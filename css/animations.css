@@ -147,8 +147,8 @@
 
 /* ─── Trust Icon Draw-In ─── */
 .trust-pillar.revealed .trust-pillar__icon svg {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
   animation: drawIn 0.8s var(--ease-smooth) forwards;
 }
 
@@ -251,3 +251,19 @@
     animation: none;
     opacity: 0.3;
   }
+}
+
+/* ─── Conveyor Belt Drive ─── */
+@keyframes beltDrive {
+  from {
+    stroke-dashoffset: 12;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.trust-pillar.revealed .conveyor-belt {
+  stroke-dasharray: 4 2;
+  animation: beltDrive 1s linear infinite;
+}
